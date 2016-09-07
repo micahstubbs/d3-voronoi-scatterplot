@@ -848,7 +848,7 @@
     var wrapperLabel = cfg.wrapperLabel;
     var tooltipVariables = cfg.tooltipColumns;
     var numericVariables = cfg.numericColumns;
-    var responseVariable = cfg.responseColumn;
+    var xLabelDetail = cfg.xLabelDetail;
     var dependent = cfg.dependent;
     var globalExtents = cfg.globalExtents;
     var animateFromXAxis = cfg.animateFromXAxis;
@@ -857,8 +857,8 @@
 
     // labels
     var xLabel = cfg.xLabel || xVariable;
-    if (typeof responseVariable !== 'undefined') {
-      xLabel = xLabel + ' (' + responseVariable + ')';
+    if (typeof xLabelDetail !== 'undefined') {
+      xLabel = xLabel + ' (' + xLabelDetail + ')';
     }
     var yLabel = cfg.yLabel || yVariable;;
     // const xLabel = 'y\u{0302}'; // y-hat for the prediction

@@ -51,7 +51,7 @@ export function drawVoronoiScatterplot(selector, inputData, options) {
   const wrapperLabel = cfg.wrapperLabel;
   const tooltipVariables = cfg.tooltipColumns;
   const numericVariables = cfg.numericColumns;
-  const responseVariable = cfg.responseColumn;
+  const xLabelDetail = cfg.xLabelDetail;
   const dependent = cfg.dependent;
   const globalExtents = cfg.globalExtents;
   const animateFromXAxis = cfg.animateFromXAxis;
@@ -60,8 +60,8 @@ export function drawVoronoiScatterplot(selector, inputData, options) {
 
   // labels
   let xLabel = cfg.xLabel || xVariable;
-  if (typeof responseVariable !== 'undefined') { 
-    xLabel = `${xLabel} (${responseVariable})` 
+  if (typeof xLabelDetail !== 'undefined') { 
+    xLabel = `${xLabel} (${xLabelDetail})` 
   }
   const yLabel = cfg.yLabel || yVariable;;
   // const xLabel = 'y\u{0302}'; // y-hat for the prediction
