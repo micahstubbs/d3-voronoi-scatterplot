@@ -819,7 +819,7 @@
       margin: { left: 120, top: 20, right: 80, bottom: 20 },
       width: 1000,
       animateFromXAxis: undefined,
-      yVariable: 'residual',
+      yVariable: 'y',
       idVariable: 'id',
       marks: {
         r: 2,
@@ -860,7 +860,7 @@
     if (typeof responseVariable !== 'undefined') {
       xLabel = xLabel + ' (' + responseVariable + ')';
     }
-    var yLabel = 'residual';
+    var yLabel = cfg.yLabel || yVariable;;
     // const xLabel = 'y\u{0302}'; // y-hat for the prediction
     // const yLabel = 'r\u{0302}'; // r-hat for the residual
 
