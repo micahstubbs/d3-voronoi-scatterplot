@@ -844,7 +844,7 @@
     var rVariable = undefined;
     var idVariable = cfg.idVariable;
     var groupByVariable = undefined;
-    var currentAlgo = cfg.currentAlgo;
+    var wrapperId = cfg.wrapperId;
     var currentAlgoLabel = cfg.currentAlgoLabel;
     var tooltipVariables = cfg.tooltipColumns;
     var numericVariables = cfg.numericColumns;
@@ -880,14 +880,14 @@
     if (typeof dependent !== 'undefined') {
       svg.classed('dependent', true);
       wrapper.classed('dependent', true);
-      wrapper.attr('id', currentAlgo);
+      wrapper.attr('id', wrapperId);
 
       // draw model label
       wrapper.append('g').attr('transform', 'translate(' + 20 + ', ' + 45 + ')').append('text').classed('modelLabel', true).style('font-size', '40px').style('font-weight', 400).style('opacity', 0.15).style('fill', 'gray').style('font-family', 'Work Sans, sans-serif').text('' + currentAlgoLabel);
     } else {
       svg.classed('independent', true);
       wrapper.classed('independent', true);
-      wrapper.attr('id', currentAlgo);
+      wrapper.attr('id', wrapperId);
     }
 
     //
@@ -964,7 +964,7 @@
     // Initiate a group element for the circles
     var circleGroup = wrapper.append('g').attr('class', 'circleWrapper');
 
-    // Place the country circles
+    // Place the circles
     var circles = circleGroup.selectAll('marks').data(function () {
       if (typeof rVariable !== 'undefined') {
         // Sort so the biggest circles are below

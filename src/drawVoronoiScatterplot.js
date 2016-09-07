@@ -47,7 +47,7 @@ export function drawVoronoiScatterplot(selector, inputData, options) {
   const rVariable = undefined;
   const idVariable = cfg.idVariable;
   const groupByVariable = undefined;
-  const currentAlgo = cfg.currentAlgo;
+  const wrapperId = cfg.wrapperId;
   const currentAlgoLabel = cfg.currentAlgoLabel;
   const tooltipVariables = cfg.tooltipColumns;
   const numericVariables = cfg.numericColumns;
@@ -91,7 +91,7 @@ export function drawVoronoiScatterplot(selector, inputData, options) {
   if (typeof dependent !== 'undefined') {
     svg.classed('dependent', true);
     wrapper.classed('dependent', true);
-    wrapper.attr('id', currentAlgo);
+    wrapper.attr('id', wrapperId);
 
     // draw model label
     wrapper.append('g')
@@ -107,7 +107,7 @@ export function drawVoronoiScatterplot(selector, inputData, options) {
   } else {
     svg.classed('independent', true);
     wrapper.classed('independent', true);
-    wrapper.attr('id', currentAlgo);
+    wrapper.attr('id', wrapperId);
   }
 
   //
