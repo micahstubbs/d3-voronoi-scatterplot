@@ -23,7 +23,7 @@ export function drawVoronoiScatterplot(selector, inputData, options) {
   const cfg = {
     margin: { left: 120, top: 20, right: 80, bottom: 20 },
     width: 1000,
-    animateFromZero: undefined,
+    animateFromXAxis: undefined,
     yVariable: 'residual',
     idVariable: 'id',
     marks: {
@@ -48,13 +48,13 @@ export function drawVoronoiScatterplot(selector, inputData, options) {
   const idVariable = cfg.idVariable;
   const groupByVariable = undefined;
   const wrapperId = cfg.wrapperId;
-  const currentAlgoLabel = cfg.currentAlgoLabel;
+  const wrapperLabel = cfg.wrapperLabel;
   const tooltipVariables = cfg.tooltipColumns;
   const numericVariables = cfg.numericColumns;
   const responseVariable = cfg.responseColumn;
   const dependent = cfg.dependent;
   const globalExtents = cfg.globalExtents;
-  const animateFromZero = cfg.animateFromZero;
+  const animateFromXAxis = cfg.animateFromXAxis;
   const opacityCircles = cfg.marks.fillOpacity;
   const marksRadius = cfg.marks.r;
 
@@ -103,7 +103,7 @@ export function drawVoronoiScatterplot(selector, inputData, options) {
       .style('opacity', 0.15)
       .style('fill', 'gray')
       .style('font-family', 'Work Sans, sans-serif')
-      .text(`${currentAlgoLabel}`);
+      .text(`${wrapperLabel}`);
   } else {
     svg.classed('independent', true);
     wrapper.classed('independent', true);
@@ -180,10 +180,13 @@ export function drawVoronoiScatterplot(selector, inputData, options) {
     //   })(d))
     .scale(xScale);
 
+  // calculate y-position we'd like for the x-axis
+  const xAxisYTranslate = d3.max([0, yScale.domain()[0]]);
+
   // Append the x-axis
   wrapper.append('g')
     .attr('class', 'x axis')
-    .attr('transform', `translate(${0}, ${yScale(0)})`)
+    .attr('transform', `translate(${0}, ${yScale(xAxisYTranslate)})`)
     .call(xAxis);
 
   const yAxis = d3.axisLeft()
@@ -237,8 +240,8 @@ export function drawVoronoiScatterplot(selector, inputData, options) {
         return xScale(d[xVariable]);
       })
       .attr('cy', d => {
-        if (typeof animateFromZero !== 'undefined') {
-          return yScale(0);
+        if (typeof animateFromXAxis !== 'undefined') {
+          return yScale(xAxisYTranslate);
         } else {
           return yScale(d[yVariable]);
         }
@@ -251,7 +254,7 @@ export function drawVoronoiScatterplot(selector, inputData, options) {
         return marksRadius; 
       });
 
-  if (typeof animateFromZero !== 'undefined') {
+  if (typeof animateFromXAxis !== 'undefined') {
     circles
       .transition()
       .delay(2000)
@@ -307,7 +310,7 @@ export function drawVoronoiScatterplot(selector, inputData, options) {
     .attr('dy', '0.35em')
     .style('font-size', `${mobileScreen ? 8 : 12}px`)
     // .attr('transform', 'translate(18, 0) rotate(-90)')
-    .attr('transform', `translate(${-(margin.left / 4)},${yScale(0)})`)
+    .attr('transform', `translate(${-(margin.left / 4)},${yScale(xAxisYTranslate)})`)
     .text(`${yLabelText}`);
 
   //

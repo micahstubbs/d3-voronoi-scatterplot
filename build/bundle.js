@@ -724,9 +724,9 @@
         return 'voronoi ' + d.datum[idVariable];
       }
       return 'voronoi';
-    })
-    // .style('stroke', 'lightblue') // I use this to look at how the cells are dispersed as a check
-    .style('stroke', 'none').style('fill', 'none').style('pointer-events', 'all')
+    }).style('stroke', 'lightblue') // I use this to look at how the cells are dispersed as a check
+    // .style('stroke', 'none')
+    .style('fill', 'none').style('pointer-events', 'all')
     // .on('mouseover', tip.show)
     // .on('mouseout', tip.hide);
     .on('mouseover', function (d, i, nodes) {
@@ -818,7 +818,7 @@
     var cfg = {
       margin: { left: 120, top: 20, right: 80, bottom: 20 },
       width: 1000,
-      animateFromZero: undefined,
+      animateFromXAxis: undefined,
       yVariable: 'residual',
       idVariable: 'id',
       marks: {
@@ -845,13 +845,13 @@
     var idVariable = cfg.idVariable;
     var groupByVariable = undefined;
     var wrapperId = cfg.wrapperId;
-    var currentAlgoLabel = cfg.currentAlgoLabel;
+    var wrapperLabel = cfg.wrapperLabel;
     var tooltipVariables = cfg.tooltipColumns;
     var numericVariables = cfg.numericColumns;
     var responseVariable = cfg.responseColumn;
     var dependent = cfg.dependent;
     var globalExtents = cfg.globalExtents;
-    var animateFromZero = cfg.animateFromZero;
+    var animateFromXAxis = cfg.animateFromXAxis;
     var opacityCircles = cfg.marks.fillOpacity;
     var marksRadius = cfg.marks.r;
 
@@ -883,7 +883,7 @@
       wrapper.attr('id', wrapperId);
 
       // draw model label
-      wrapper.append('g').attr('transform', 'translate(' + 20 + ', ' + 45 + ')').append('text').classed('modelLabel', true).style('font-size', '40px').style('font-weight', 400).style('opacity', 0.15).style('fill', 'gray').style('font-family', 'Work Sans, sans-serif').text('' + currentAlgoLabel);
+      wrapper.append('g').attr('transform', 'translate(' + 20 + ', ' + 45 + ')').append('text').classed('modelLabel', true).style('font-size', '40px').style('font-weight', 400).style('opacity', 0.15).style('fill', 'gray').style('font-family', 'Work Sans, sans-serif').text('' + wrapperLabel);
     } else {
       svg.classed('independent', true);
       wrapper.classed('independent', true);
@@ -941,8 +941,11 @@
     //   })(d))
     .scale(xScale);
 
+    // calculate y-position we'd like for the x-axis
+    var xAxisYTranslate = d3.max([0, yScale.domain()[0]]);
+
     // Append the x-axis
-    wrapper.append('g').attr('class', 'x axis').attr('transform', 'translate(' + 0 + ', ' + yScale(0) + ')').call(xAxis);
+    wrapper.append('g').attr('class', 'x axis').attr('transform', 'translate(' + 0 + ', ' + yScale(xAxisYTranslate) + ')').call(xAxis);
 
     var yAxis = d3.axisLeft().ticks(6) // Set rough # of ticks
     .scale(yScale);
@@ -983,8 +986,8 @@
     }).attr('cx', function (d) {
       return xScale(d[xVariable]);
     }).attr('cy', function (d) {
-      if (typeof animateFromZero !== 'undefined') {
-        return yScale(0);
+      if (typeof animateFromXAxis !== 'undefined') {
+        return yScale(xAxisYTranslate);
       } else {
         return yScale(d[yVariable]);
       }
@@ -995,7 +998,7 @@
       return marksRadius;
     });
 
-    if (typeof animateFromZero !== 'undefined') {
+    if (typeof animateFromXAxis !== 'undefined') {
       circles.transition().delay(2000).duration(2000).attr('cy', function (d) {
         return yScale(d[yVariable]);
       });
@@ -1037,7 +1040,7 @@
     // Set up y axis label
     wrapper.append('g').append('text').attr('class', 'y title').attr('text-anchor', 'end').attr('dy', '0.35em').style('font-size', (mobileScreen ? 8 : 12) + 'px')
     // .attr('transform', 'translate(18, 0) rotate(-90)')
-    .attr('transform', 'translate(' + -(margin.left / 4) + ',' + yScale(0) + ')').text('' + yLabelText);
+    .attr('transform', 'translate(' + -(margin.left / 4) + ',' + yScale(xAxisYTranslate) + ')').text('' + yLabelText);
 
     //
     // Hide axes on click
