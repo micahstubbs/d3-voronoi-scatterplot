@@ -141,6 +141,10 @@ export function drawVoronoiScatterplot(selector, inputData, options) {
     })
   })
 
+  //
+  // Scales
+  //
+
   // Set the new x axis range
   const xScale = d3.scaleLinear()
     .range([0, width]);
@@ -168,6 +172,10 @@ export function drawVoronoiScatterplot(selector, inputData, options) {
       .domain(d3.extent(data, d => d[yVariable]))
       .nice();
   }
+
+  //
+  // Axes
+  //
 
   // Set new x-axis
   const xAxis = d3.axisBottom()
@@ -226,7 +234,7 @@ export function drawVoronoiScatterplot(selector, inputData, options) {
 
   function update(data) {
     console.log('update function was called');
-    console.log('data from update function', data);
+    // console.log('data from update function', data);
     // Place the circles
     const updateSelection = circleGroup.selectAll('circle') // circleGroup.selectAll('.marks')
       .data(() => {
@@ -287,7 +295,7 @@ export function drawVoronoiScatterplot(selector, inputData, options) {
     // console.log('mergedSelection', mergedSelection);
     // console.log('mergedSelection.nodes()', mergedSelection.nodes());
     const mergedSelectionData = mergedSelection.nodes().map(d => d.__data__);
-    console.log('mergedSelectionData', mergedSelectionData);
+    // console.log('mergedSelectionData', mergedSelectionData);
 
     if (typeof animateFromXAxis !== 'undefined') {
       updateSelection

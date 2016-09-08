@@ -748,15 +748,15 @@
       // Save the circle element (so not the voronoi which is triggering the hover event)
       // in a variable by using the unique class of the voronoi (idVariable)
       var elementSelector = '.marks.id' + d.datum[idVariable];
-      console.log('elementSelector', elementSelector);
+      // console.log('elementSelector', elementSelector);
       var element = d3.selectAll('.marks.id' + d.datum[idVariable]);
-      console.log('element from showTooltip', element);
-      console.log('d from showTooltip', d);
+      // console.log('element from showTooltip', element);
+      // console.log('d from showTooltip', d);
       var pathStartX = Number(d.path.split('M')[1].split(',')[0]);
       var pathStartY = Number(d.path.split(',')[1].split('L')[0]);
       // console.log('pathStartX', pathStartX);
       // console.log('pathStartY', pathStartY);
-      console.log('element.nodes()[0] from showTooltip', element.nodes()[0]);
+      // console.log('element.nodes()[0] from showTooltip', element.nodes()[0]);
       var currentDOMNode = element.nodes()[0];
       var cx = currentDOMNode.cx.baseVal.value;
       var cy = currentDOMNode.cy.baseVal.value;
@@ -912,6 +912,10 @@
       });
     });
 
+    //
+    // Scales
+    //
+
     // Set the new x axis range
     var xScale = d3.scaleLinear().range([0, width]);
 
@@ -936,6 +940,10 @@
         return d[yVariable];
       })).nice();
     }
+
+    //
+    // Axes
+    //
 
     // Set new x-axis
     var xAxis = d3.axisBottom().ticks(4).tickSizeOuter(0)
@@ -981,7 +989,7 @@
 
     function update(data) {
       console.log('update function was called');
-      console.log('data from update function', data);
+      // console.log('data from update function', data);
       // Place the circles
       var updateSelection = circleGroup.selectAll('circle') // circleGroup.selectAll('.marks')
       .data(function () {
@@ -1037,7 +1045,7 @@
       var mergedSelectionData = mergedSelection.nodes().map(function (d) {
         return d.__data__;
       });
-      console.log('mergedSelectionData', mergedSelectionData);
+      // console.log('mergedSelectionData', mergedSelectionData);
 
       if (typeof animateFromXAxis !== 'undefined') {
         updateSelection.transition().delay(2000).duration(2000).attr('cy', function (d) {
