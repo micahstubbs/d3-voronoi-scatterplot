@@ -210,59 +210,6 @@ export function drawVoronoiScatterplot(selector, inputData, options) {
   }
 
   //
-  // Scatterplot Circles
-  //
-
-  // Initiate a group element for the circles
-  const circleGroup = wrapper.append('g')
-    .attr('class', 'circleWrapper');
-
-  // Place the circles
-  const circles = circleGroup.selectAll('marks')
-    .data(() => {
-        if (typeof rVariable !== 'undefined') {
-          // Sort so the biggest circles are below
-          return data.sort((a, b) => b[rVariable] > a[rVariable]);
-        }
-        return data;
-      }
-    )
-    .enter().append('circle')
-      .attr('class', (d) => `marks id${d[idVariable]}`)
-      .style('fill-opacity', opacityCircles)
-      .style('fill', d => {
-        if (typeof groupByVariable !== 'undefined') {
-          return color(d[groupByVariable]);
-        } 
-        return color.range()[0];
-      })
-      .attr('cx', d => {
-        return xScale(d[xVariable]);
-      })
-      .attr('cy', d => {
-        if (typeof animateFromXAxis !== 'undefined') {
-          return yScale(xAxisYTranslate);
-        } else {
-          return yScale(d[yVariable]);
-        }
-        
-      })
-      .attr('r', d => {
-        if (typeof rVariable !== 'undefined') {
-          return rScale(d[rVariable])
-        } 
-        return marksRadius; 
-      });
-
-  if (typeof animateFromXAxis !== 'undefined') {
-    circles
-      .transition()
-      .delay(2000)
-      .duration(2000)
-      .attr('cy', d => yScale(d[yVariable]));
-  }
-
-  //
   // Tooltips
   //
 
@@ -270,20 +217,120 @@ export function drawVoronoiScatterplot(selector, inputData, options) {
   svg.call(tip);
 
   //
-  // distance-limited Voronoi overlay
+  // Scatterplot Circles
   //
 
-  const voronoiOptions = {
-    xVariable,
-    yVariable,
-    idVariable,
-    xScale,
-    yScale,
-    width,
-    height,
-    tip
+  // Initiate a group element for the circles
+  const circleGroup = wrapper.append('g')
+    .attr('class', 'circleWrapper');
+
+  function update(data) {
+    console.log('update function was called');
+    console.log('data from update function', data);
+    // Place the circles
+    const updateSelection = circleGroup.selectAll('circle') // circleGroup.selectAll('.marks')
+      .data(() => {
+          if (typeof rVariable !== 'undefined') {
+            // Sort so the biggest circles are below
+            return data.sort((a, b) => b[rVariable] > a[rVariable]);
+          }
+          return data;
+        }, d => d[idVariable]
+      );
+    // console.log('updateSelection', updateSelection);
+
+    const enterSelection = updateSelection.enter()
+      .append('circle');
+    // console.log('enterSelection', enterSelection);
+
+    const exitSelection = updateSelection.exit();
+    // console.log('exitSelection', exitSelection);
+
+    updateSelection
+      .style('fill', 'black');
+
+    enterSelection
+      .attr('class', (d) => `marks id${d[idVariable]}`)
+      .style('fill-opacity', opacityCircles)
+      .style('fill', d => {
+          if (typeof groupByVariable !== 'undefined') {
+            return color(d[groupByVariable]);
+          } 
+          return 'green'; // color.range()[0];
+        })
+        .attr('cx', d => {
+          return xScale(d[xVariable]);
+        })
+        .attr('cy', d => {
+          if (typeof animateFromXAxis !== 'undefined') {
+            return yScale(xAxisYTranslate);
+          } else {
+            return yScale(d[yVariable]);
+          }
+        })
+        .attr('r', d => {
+          if (typeof rVariable !== 'undefined') {
+            return rScale(d[rVariable])
+          } 
+          return marksRadius; 
+        })
+        // .append('title')
+        //   .text(d => `${d[idVariable]} ${d[xLabelDetail]}`);
+
+    exitSelection
+      .style('fill', 'red')
+      .transition()
+      .delay(4000)
+      .remove();
+
+    const mergedSelection = updateSelection.merge(enterSelection);
+    // console.log('mergedSelection', mergedSelection);
+    // console.log('mergedSelection.nodes()', mergedSelection.nodes());
+    const mergedSelectionData = mergedSelection.nodes().map(d => d.__data__);
+    console.log('mergedSelectionData', mergedSelectionData);
+
+    if (typeof animateFromXAxis !== 'undefined') {
+      updateSelection
+        .transition()
+        .delay(2000)
+        .duration(2000)
+        .attr('cy', d => yScale(d[yVariable]));
+    }
+
+    //
+    // distance-limited Voronoi overlay
+    //
+
+    const voronoiOptions = {
+      xVariable,
+      yVariable,
+      idVariable,
+      xScale,
+      yScale,
+      width,
+      height,
+      tip
+    }
+    drawVoronoiOverlay(wrapper, mergedSelectionData, voronoiOptions);
   }
-  drawVoronoiOverlay(wrapper, data, voronoiOptions);
+
+  // call the update function once to kick things off
+  update(data);
+
+  // //
+  // // distance-limited Voronoi overlay
+  // //
+  // const voronoiOptions = {
+  //   xVariable,
+  //   yVariable,
+  //   idVariable,
+  //   xScale,
+  //   yScale,
+  //   width,
+  //   height,
+  //   tip
+  // }
+  // drawVoronoiOverlay(wrapper, data, voronoiOptions);
 
   //
   // Initialize Labels
@@ -342,5 +389,14 @@ export function drawVoronoiScatterplot(selector, inputData, options) {
     .on('click', () => {
       click();
     });
+
+  // console.log('update from drawVoronoiScatterplot', update);
+  return update;
+
+  // drawVoronoiScatterplot.update = (data) => {
+  //   // console.log('drawVoronoiScatterplot.update() was called');
+  //   if (typeof update === 'function') update(data);
+  // };
+
 
 }

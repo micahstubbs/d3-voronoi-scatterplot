@@ -34,6 +34,10 @@ export function drawVoronoiOverlay(selector, data, options) {
   // console.log('data[0]', data[0]);
   const limitedVoronoiCells = limitedVoronoi(data);
 
+  // remove any existing Voronoi overlay
+  selector.selectAll('.voronoiWrapper')
+    .remove();
+
   // create a group element to place the Voronoi diagram in
   const limitedVoronoiGroup = selector.append('g')
     .attr('class', 'voronoiWrapper');
@@ -58,8 +62,8 @@ export function drawVoronoiOverlay(selector, data, options) {
         }
         return 'voronoi';
       })
-      // .style('stroke', 'lightblue') // I use this to look at how the cells are dispersed as a check
-      .style('stroke', 'none')
+      .style('stroke', 'lightblue') // I use this to look at how the cells are dispersed as a check
+      // .style('stroke', 'none')
       .style('fill', 'none')
       .style('pointer-events', 'all')
       // .on('mouseover', tip.show)
@@ -80,14 +84,16 @@ export function drawVoronoiOverlay(selector, data, options) {
   function showTooltip(d, i, nodes) {
     // Save the circle element (so not the voronoi which is triggering the hover event)
     // in a variable by using the unique class of the voronoi (idVariable)
+    const elementSelector = `.marks.id${d.datum[idVariable]}`;
+    console.log('elementSelector', elementSelector);
     const element = d3.selectAll(`.marks.id${d.datum[idVariable]}`);
-    // console.log('element from showTooltip', element);
-    // console.log('d from showTooltip', d);
+    console.log('element from showTooltip', element);
+    console.log('d from showTooltip', d);
     const pathStartX = Number(d.path.split('M')[1].split(',')[0]);
     const pathStartY = Number(d.path.split(',')[1].split('L')[0]);
     // console.log('pathStartX', pathStartX);
     // console.log('pathStartY', pathStartY);
-    // console.log('element.nodes()[0] from removeTooltip', element.nodes()[0]);
+    console.log('element.nodes()[0] from showTooltip', element.nodes()[0]);
     const currentDOMNode = element.nodes()[0];
     const cx = currentDOMNode.cx.baseVal.value;
     const cy = currentDOMNode.cy.baseVal.value;
