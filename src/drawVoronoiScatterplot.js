@@ -46,7 +46,7 @@ export function drawVoronoiScatterplot(selector, inputData, options) {
   const yVariable = cfg.yVariable;
   const rVariable = undefined;
   const idVariable = cfg.idVariable;
-  const groupByVariable = undefined;
+  let groupByVariable = cfg.groupByVariable;
   const wrapperId = cfg.wrapperId;
   const wrapperLabel = cfg.wrapperLabel;
   const tooltipVariables = cfg.tooltipColumns;
@@ -232,9 +232,22 @@ export function drawVoronoiScatterplot(selector, inputData, options) {
   const circleGroup = wrapper.append('g')
     .attr('class', 'circleWrapper');
 
-  function update(data) {
+  function update(data, options) {
     console.log('update function was called');
     // console.log('data from update function', data);
+    
+    // an extra delay to allow large 
+    // amounts of points time to render
+    let marksDelay = 0;
+    if (typeof options !== 'undefined') {
+      marksDelay = options.marksDelay;
+
+      // if a new groupByVariable is passed in, use it
+      if (typeof options.groupByVariable !== 'undefined') {
+        groupByVariable = options.groupByVariable;
+      };
+    } 
+
     // Place the circles
     const updateSelection = circleGroup.selectAll('circle') // circleGroup.selectAll('.marks')
       .data(() => {
@@ -255,16 +268,16 @@ export function drawVoronoiScatterplot(selector, inputData, options) {
     // console.log('exitSelection', exitSelection);
 
     updateSelection
-      .style('fill', 'black');
+      // .style('fill', 'black');
 
     enterSelection
       .attr('class', (d) => `marks id${d[idVariable]}`)
-      .style('fill-opacity', opacityCircles)
+      .style('fill-opacity', 0)
       .style('fill', d => {
           if (typeof groupByVariable !== 'undefined') {
             return color(d[groupByVariable]);
           } 
-          return 'green'; // color.range()[0];
+          return color.range()[0]; // 'green'
         })
         .attr('cx', d => {
           return xScale(d[xVariable]);
@@ -282,14 +295,23 @@ export function drawVoronoiScatterplot(selector, inputData, options) {
           } 
           return marksRadius; 
         })
+        .transition()
+        .delay(marksDelay)
+        .duration(2000)
+        .style('fill-opacity', opacityCircles);
         // .append('title')
         //   .text(d => `${d[idVariable]} ${d[xLabelDetail]}`);
 
     exitSelection
-      .style('fill', 'red')
       .transition()
-      .delay(4000)
-      .remove();
+      .delay(marksDelay)
+      .duration(0)
+      .style('fill', 'lightgray') // 'red'
+      .transition()
+      .delay(2000)
+      .duration(2000)
+      .style('fill-opacity', 0)
+      .remove(); 
 
     const mergedSelection = updateSelection.merge(enterSelection);
     // console.log('mergedSelection', mergedSelection);

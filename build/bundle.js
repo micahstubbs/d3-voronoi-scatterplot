@@ -727,9 +727,9 @@
         return 'voronoi ' + d.datum[idVariable];
       }
       return 'voronoi';
-    }).style('stroke', 'lightblue') // I use this to look at how the cells are dispersed as a check
-    // .style('stroke', 'none')
-    .style('fill', 'none').style('pointer-events', 'all')
+    })
+    // .style('stroke', 'lightblue') // I use this to look at how the cells are dispersed as a check
+    .style('stroke', 'none').style('fill', 'none').style('pointer-events', 'all')
     // .on('mouseover', tip.show)
     // .on('mouseout', tip.hide);
     .on('mouseover', function (d, i, nodes) {
@@ -848,7 +848,7 @@
     var yVariable = cfg.yVariable;
     var rVariable = undefined;
     var idVariable = cfg.idVariable;
-    var groupByVariable = undefined;
+    var groupByVariable = cfg.groupByVariable;
     var wrapperId = cfg.wrapperId;
     var wrapperLabel = cfg.wrapperLabel;
     var tooltipVariables = cfg.tooltipColumns;
@@ -987,9 +987,22 @@
     // Initiate a group element for the circles
     var circleGroup = wrapper.append('g').attr('class', 'circleWrapper');
 
-    function update(data) {
+    function update(data, options) {
       console.log('update function was called');
       // console.log('data from update function', data);
+
+      // an extra delay to allow large 
+      // amounts of points time to render
+      var marksDelay = 0;
+      if (typeof options !== 'undefined') {
+        marksDelay = options.marksDelay;
+
+        // if a new groupByVariable is passed in, use it
+        if (typeof options.groupByVariable !== 'undefined') {
+          groupByVariable = options.groupByVariable;
+        };
+      }
+
       // Place the circles
       var updateSelection = circleGroup.selectAll('circle') // circleGroup.selectAll('.marks')
       .data(function () {
@@ -1011,15 +1024,16 @@
       var exitSelection = updateSelection.exit();
       // console.log('exitSelection', exitSelection);
 
-      updateSelection.style('fill', 'black');
+      updateSelection;
+      // .style('fill', 'black');
 
       enterSelection.attr('class', function (d) {
         return 'marks id' + d[idVariable];
-      }).style('fill-opacity', opacityCircles).style('fill', function (d) {
+      }).style('fill-opacity', 0).style('fill', function (d) {
         if (typeof groupByVariable !== 'undefined') {
           return color(d[groupByVariable]);
         }
-        return 'green'; // color.range()[0];
+        return color.range()[0]; // 'green'
       }).attr('cx', function (d) {
         return xScale(d[xVariable]);
       }).attr('cy', function (d) {
@@ -1033,11 +1047,12 @@
           return rScale(d[rVariable]);
         }
         return marksRadius;
-      });
+      }).transition().delay(marksDelay).duration(2000).style('fill-opacity', opacityCircles);
       // .append('title')
       //   .text(d => `${d[idVariable]} ${d[xLabelDetail]}`);
 
-      exitSelection.style('fill', 'red').transition().delay(4000).remove();
+      exitSelection.transition().delay(marksDelay).duration(0).style('fill', 'lightgray') // 'red'
+      .transition().delay(2000).duration(2000).style('fill-opacity', 0).remove();
 
       var mergedSelection = updateSelection.merge(enterSelection);
       // console.log('mergedSelection', mergedSelection);
