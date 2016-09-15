@@ -58,12 +58,12 @@ export function drawVoronoiOverlay(selector, data, options) {
       // .attr('class', d => `voronoi ${d.datum[idVariable]}`)
       .attr('class', d => {
         if (typeof d !== 'undefined') {
-          return `voronoi ${d.datum[idVariable]}`;
+          return `voronoi id${xVariable}${yVariable}${d.datum[idVariable]}`;
         }
         return 'voronoi';
       })
-      .style('stroke', 'lightblue') // I use this to look at how the cells are dispersed as a check
-      // .style('stroke', 'none')
+      // .style('stroke', 'lightblue') // I use this to look at how the cells are dispersed as a check
+      .style('stroke', 'none')
       .style('fill', 'none')
       .style('pointer-events', 'all')
       // .on('mouseover', tip.show)
@@ -84,9 +84,9 @@ export function drawVoronoiOverlay(selector, data, options) {
   function showTooltip(d, i, nodes) {
     // Save the circle element (so not the voronoi which is triggering the hover event)
     // in a variable by using the unique class of the voronoi (idVariable)
-    const elementSelector = `.marks.id${d.datum[idVariable]}`;
+    const elementSelector = `.marks.id${xVariable}${yVariable}${d.datum[idVariable]}`;
     // console.log('elementSelector', elementSelector);
-    const element = d3.selectAll(`.marks.id${d.datum[idVariable]}`);
+    const element = d3.selectAll(`.marks.id${xVariable}${yVariable}${d.datum[idVariable]}`);
     // console.log('element from showTooltip', element);
     // console.log('d from showTooltip', d);
     const pathStartX = Number(d.path.split('M')[1].split(',')[0]);
@@ -129,7 +129,7 @@ export function drawVoronoiOverlay(selector, data, options) {
 
     // Save the circle element (so not the voronoi which is triggering the hover event)
     // in a variable by using the unique class of the voronoi (idVariable)
-    const element = d3.selectAll(`.marks.id${d.datum[idVariable]}`);
+    const element = d3.selectAll(`.marks.id${xVariable}${yVariable}${d.datum[idVariable]}`);
     // console.log('element from removeTooltip', element);
     // console.log('element.nodes()[0] from removeTooltip', element.nodes()[0]);
     const currentDOMNode = element.nodes()[0];

@@ -724,12 +724,12 @@
     // .attr('class', d => `voronoi ${d.datum[idVariable]}`)
     .attr('class', function (d) {
       if (typeof d !== 'undefined') {
-        return 'voronoi ' + d.datum[idVariable];
+        return 'voronoi id' + xVariable + yVariable + d.datum[idVariable];
       }
       return 'voronoi';
-    }).style('stroke', 'lightblue') // I use this to look at how the cells are dispersed as a check
-    // .style('stroke', 'none')
-    .style('fill', 'none').style('pointer-events', 'all')
+    })
+    // .style('stroke', 'lightblue') // I use this to look at how the cells are dispersed as a check
+    .style('stroke', 'none').style('fill', 'none').style('pointer-events', 'all')
     // .on('mouseover', tip.show)
     // .on('mouseout', tip.hide);
     .on('mouseover', function (d, i, nodes) {
@@ -747,9 +747,9 @@
     function showTooltip(d, i, nodes) {
       // Save the circle element (so not the voronoi which is triggering the hover event)
       // in a variable by using the unique class of the voronoi (idVariable)
-      var elementSelector = '.marks.id' + d.datum[idVariable];
+      var elementSelector = '.marks.id' + xVariable + yVariable + d.datum[idVariable];
       // console.log('elementSelector', elementSelector);
-      var element = d3.selectAll('.marks.id' + d.datum[idVariable]);
+      var element = d3.selectAll('.marks.id' + xVariable + yVariable + d.datum[idVariable]);
       // console.log('element from showTooltip', element);
       // console.log('d from showTooltip', d);
       var pathStartX = Number(d.path.split('M')[1].split(',')[0]);
@@ -791,7 +791,7 @@
 
       // Save the circle element (so not the voronoi which is triggering the hover event)
       // in a variable by using the unique class of the voronoi (idVariable)
-      var element = d3.selectAll('.marks.id' + d.datum[idVariable]);
+      var element = d3.selectAll('.marks.id' + xVariable + yVariable + d.datum[idVariable]);
       // console.log('element from removeTooltip', element);
       // console.log('element.nodes()[0] from removeTooltip', element.nodes()[0]);
       var currentDOMNode = element.nodes()[0];
@@ -1033,7 +1033,7 @@
       // .style('fill', 'black');
 
       enterSelection.attr('class', function (d) {
-        return 'marks id' + d[idVariable];
+        return 'marks id' + xVariable + yVariable + d[idVariable];
       }).style('fill-opacity', 0).style('fill', function (d) {
         // console.log('d from style', d);
         if (typeof groupByVariable !== 'undefined') {

@@ -276,7 +276,7 @@ export function drawVoronoiScatterplot(selector, inputData, options) {
       // .style('fill', 'black');
 
     enterSelection
-      .attr('class', (d) => `marks id${d[idVariable]}`)
+      .attr('class', (d) => `marks id${xVariable}${yVariable}${d[idVariable]}`)
       .style('fill-opacity', 0)
       .style('fill', d => {
         // console.log('d from style', d);
