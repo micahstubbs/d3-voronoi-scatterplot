@@ -236,6 +236,11 @@ export function drawVoronoiScatterplot(selector, inputData, options) {
     console.log('update function was called');
     // console.log('data from update function', data);
     
+    // handle NaN values
+    data = data.filter(d => {
+      return !Number.isNaN(d[xVariable]) && !Number.isNaN(d[yVariable]);
+    });
+
     // an extra delay to allow large 
     // amounts of points time to render
     let marksDelay = 0;
@@ -274,33 +279,39 @@ export function drawVoronoiScatterplot(selector, inputData, options) {
       .attr('class', (d) => `marks id${d[idVariable]}`)
       .style('fill-opacity', 0)
       .style('fill', d => {
-          if (typeof groupByVariable !== 'undefined') {
-            return color(d[groupByVariable]);
-          } 
-          return color.range()[0]; // 'green'
-        })
-        .attr('cx', d => {
-          return xScale(d[xVariable]);
-        })
-        .attr('cy', d => {
-          if (typeof animateFromXAxis !== 'undefined') {
-            return yScale(xAxisYTranslate);
-          } else {
-            return yScale(d[yVariable]);
-          }
-        })
-        .attr('r', d => {
-          if (typeof rVariable !== 'undefined') {
-            return rScale(d[rVariable])
-          } 
-          return marksRadius; 
-        })
-        .transition()
-        .delay(marksDelay)
-        .duration(2000)
-        .style('fill-opacity', opacityCircles);
-        // .append('title')
-        //   .text(d => `${d[idVariable]} ${d[xLabelDetail]}`);
+        // console.log('d from style', d);
+        if (typeof groupByVariable !== 'undefined') {
+          return color(d[groupByVariable]);
+        } 
+        return color.range()[0]; // 'green'
+      })
+      .attr('cx', d => {
+        // console.log('cx parameters from drawVoronoiScatterplot');
+        // console.log('xScale', xScale);
+        // console.log('d', d);
+        // console.log('xVariable', xVariable);
+        // console.log('xScale(d[xVariable])', xScale(d[xVariable]));
+        return xScale(d[xVariable]);
+      })
+      .attr('cy', d => {
+        if (typeof animateFromXAxis !== 'undefined') {
+          return yScale(xAxisYTranslate);
+        } else {
+          return yScale(d[yVariable]);
+        }
+      })
+      .attr('r', d => {
+        if (typeof rVariable !== 'undefined') {
+          return rScale(d[rVariable])
+        } 
+        return marksRadius; 
+      })
+      .transition()
+      .delay(marksDelay)
+      .duration(2000)
+      .style('fill-opacity', opacityCircles);
+      // .append('title')
+      //   .text(d => `${d[idVariable]} ${d[xLabelDetail]}`);
 
     exitSelection
       .transition()

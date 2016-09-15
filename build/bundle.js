@@ -700,7 +700,7 @@
 
     var limitedVoronoi = d3DistanceLimitedVoronoi().x(xAccessor).y(yAccessor).limit(50).extent([[0, 0], [width, height]]);
 
-    // console.log('data[0]', data[0]);
+    console.log('data[0]', data[0]);
     var limitedVoronoiCells = limitedVoronoi(data);
 
     // remove any existing Voronoi overlay
@@ -727,9 +727,9 @@
         return 'voronoi ' + d.datum[idVariable];
       }
       return 'voronoi';
-    })
-    // .style('stroke', 'lightblue') // I use this to look at how the cells are dispersed as a check
-    .style('stroke', 'none').style('fill', 'none').style('pointer-events', 'all')
+    }).style('stroke', 'lightblue') // I use this to look at how the cells are dispersed as a check
+    // .style('stroke', 'none')
+    .style('fill', 'none').style('pointer-events', 'all')
     // .on('mouseover', tip.show)
     // .on('mouseout', tip.hide);
     .on('mouseover', function (d, i, nodes) {
@@ -991,6 +991,11 @@
       console.log('update function was called');
       // console.log('data from update function', data);
 
+      // handle NaN values
+      data = data.filter(function (d) {
+        return !Number.isNaN(d[xVariable]) && !Number.isNaN(d[yVariable]);
+      });
+
       // an extra delay to allow large 
       // amounts of points time to render
       var marksDelay = 0;
@@ -1030,11 +1035,17 @@
       enterSelection.attr('class', function (d) {
         return 'marks id' + d[idVariable];
       }).style('fill-opacity', 0).style('fill', function (d) {
+        // console.log('d from style', d);
         if (typeof groupByVariable !== 'undefined') {
           return color(d[groupByVariable]);
         }
         return color.range()[0]; // 'green'
       }).attr('cx', function (d) {
+        // console.log('cx parameters from drawVoronoiScatterplot');
+        // console.log('xScale', xScale);
+        // console.log('d', d);
+        // console.log('xVariable', xVariable);
+        // console.log('xScale(d[xVariable])', xScale(d[xVariable]));
         return xScale(d[xVariable]);
       }).attr('cy', function (d) {
         if (typeof animateFromXAxis !== 'undefined') {
