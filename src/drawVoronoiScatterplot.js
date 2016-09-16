@@ -38,8 +38,8 @@ export function drawVoronoiScatterplot(selector, inputData, options) {
       if (typeof options[i] !== 'undefined') { cfg[i] = options[i]; }
     }// for i
   }// if
-  console.log('options passed in to scatterplot', options);
-  console.log('cfg from scatterplot', cfg);
+  // console.log('options passed in to scatterplot', options);
+  // console.log('cfg from scatterplot', cfg);
 
   // map variables to our dataset
   const xVariable = cfg.xVariable;

@@ -31,7 +31,7 @@ export function drawVoronoiOverlay(selector, data, options) {
     .limit(50)
     .extent([[0, 0], [width, height]]);
 
-  console.log('data[0]', data[0]);
+  // console.log('data[0]', data[0]);
   const limitedVoronoiCells = limitedVoronoi(data);
 
   // remove any existing Voronoi overlay

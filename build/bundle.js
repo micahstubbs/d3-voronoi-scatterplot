@@ -700,7 +700,7 @@
 
     var limitedVoronoi = d3DistanceLimitedVoronoi().x(xAccessor).y(yAccessor).limit(50).extent([[0, 0], [width, height]]);
 
-    console.log('data[0]', data[0]);
+    // console.log('data[0]', data[0]);
     var limitedVoronoiCells = limitedVoronoi(data);
 
     // remove any existing Voronoi overlay
@@ -840,8 +840,8 @@
         }
       } // for i
     } // if
-    console.log('options passed in to scatterplot', options);
-    console.log('cfg from scatterplot', cfg);
+    // console.log('options passed in to scatterplot', options);
+    // console.log('cfg from scatterplot', cfg);
 
     // map variables to our dataset
     var xVariable = cfg.xVariable;
