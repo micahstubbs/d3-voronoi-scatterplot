@@ -32,15 +32,15 @@ export function drawVoronoiOverlay(selector, data, options) {
     .extent([[0, 0], [width, height]]);
 
   // console.log('data[0]', data[0]);
-  console.log('data from drawVoronoiOverlay', data);
+  // console.log('data from drawVoronoiOverlay', data);
   
   const xValues = data.map(d => d[xVariable]);
-  console.log('current xVariable', xVariable);
-  console.log('xValues', xValues);
+  // console.log('current xVariable', xVariable);
+  // console.log('xValues', xValues);
 
   const yValues = data.map(d => d[yVariable]);
-  console.log('current yVariable', yVariable);
-  console.log('yValues', yValues);
+  // console.log('current yVariable', yVariable);
+  // console.log('yValues', yValues);
 
   const limitedVoronoiCells = limitedVoronoi(data);
 

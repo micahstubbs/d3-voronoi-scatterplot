@@ -701,19 +701,19 @@
     var limitedVoronoi = d3DistanceLimitedVoronoi().x(xAccessor).y(yAccessor).limit(50).extent([[0, 0], [width, height]]);
 
     // console.log('data[0]', data[0]);
-    console.log('data from drawVoronoiOverlay', data);
+    // console.log('data from drawVoronoiOverlay', data);
 
     var xValues = data.map(function (d) {
       return d[xVariable];
     });
-    console.log('current xVariable', xVariable);
-    console.log('xValues', xValues);
+    // console.log('current xVariable', xVariable);
+    // console.log('xValues', xValues);
 
     var yValues = data.map(function (d) {
       return d[yVariable];
     });
-    console.log('current yVariable', yVariable);
-    console.log('yValues', yValues);
+    // console.log('current yVariable', yVariable);
+    // console.log('yValues', yValues);
 
     var limitedVoronoiCells = limitedVoronoi(data);
 
