@@ -358,21 +358,6 @@ export function drawVoronoiScatterplot(selector, inputData, options) {
   // call the update function once to kick things off
   update(data);
 
-  // //
-  // // distance-limited Voronoi overlay
-  // //
-  // const voronoiOptions = {
-  //   xVariable,
-  //   yVariable,
-  //   idVariable,
-  //   xScale,
-  //   yScale,
-  //   width,
-  //   height,
-  //   tip
-  // }
-  // drawVoronoiOverlay(wrapper, data, voronoiOptions);
-
   //
   // Initialize Labels
   //

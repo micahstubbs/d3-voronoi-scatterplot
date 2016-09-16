@@ -701,6 +701,20 @@
     var limitedVoronoi = d3DistanceLimitedVoronoi().x(xAccessor).y(yAccessor).limit(50).extent([[0, 0], [width, height]]);
 
     // console.log('data[0]', data[0]);
+    console.log('data from drawVoronoiOverlay', data);
+
+    var xValues = data.map(function (d) {
+      return d[xVariable];
+    });
+    console.log('current xVariable', xVariable);
+    console.log('xValues', xValues);
+
+    var yValues = data.map(function (d) {
+      return d[yVariable];
+    });
+    console.log('current yVariable', yVariable);
+    console.log('yValues', yValues);
+
     var limitedVoronoiCells = limitedVoronoi(data);
 
     // remove any existing Voronoi overlay
@@ -1098,21 +1112,6 @@
 
     // call the update function once to kick things off
     update(data);
-
-    // //
-    // // distance-limited Voronoi overlay
-    // //
-    // const voronoiOptions = {
-    //   xVariable,
-    //   yVariable,
-    //   idVariable,
-    //   xScale,
-    //   yScale,
-    //   width,
-    //   height,
-    //   tip
-    // }
-    // drawVoronoiOverlay(wrapper, data, voronoiOptions);
 
     //
     // Initialize Labels
