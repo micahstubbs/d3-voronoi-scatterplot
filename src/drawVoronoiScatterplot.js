@@ -24,6 +24,7 @@ export function drawVoronoiScatterplot(selector, inputData, options) {
     margin: { left: 120, top: 20, right: 80, bottom: 20 },
     width: 1000,
     animateFromXAxis: undefined,
+    hideXLabel: undefined,
     yVariable: 'y',
     idVariable: 'id',
     marks: {
@@ -52,6 +53,7 @@ export function drawVoronoiScatterplot(selector, inputData, options) {
   const tooltipVariables = cfg.tooltipColumns;
   const numericVariables = cfg.numericColumns;
   const xLabelDetail = cfg.xLabelDetail;
+  const hideXLabel = cfg.hideXLabel;
   const dependent = cfg.dependent;
   const globalExtents = cfg.globalExtents;
   const animateFromXAxis = cfg.animateFromXAxis;
@@ -374,15 +376,17 @@ export function drawVoronoiScatterplot(selector, inputData, options) {
   const xlabelText = xLabel || xVariable;
   const yLabelText = yLabel || yVariable;
 
-  // Set up X axis label
-  wrapper.append('g')
-    .append('text')
-    .attr('class', 'x title')
-    .attr('text-anchor', 'start')
-    .style('font-size', `${mobileScreen ? 8 : 12}px`)
-    .style('font-weight', 600)
-    .attr('transform', `translate(${30},${-10})`)
-    .text(`${xlabelText}`);
+  if (typeof hideXLabel === 'undefined') {
+    // Set up X axis label
+    wrapper.append('g')
+      .append('text')
+      .attr('class', 'x title')
+      .attr('text-anchor', 'start')
+      .style('font-size', `${mobileScreen ? 8 : 12}px`)
+      .style('font-weight', 600)
+      .attr('transform', `translate(${30},${-10})`)
+      .text(`${xlabelText}`);
+  }
 
   // Set up y axis label
   wrapper.append('g')
