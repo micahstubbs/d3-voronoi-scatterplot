@@ -57,6 +57,7 @@ export function drawVoronoiScatterplot(selector, inputData, options) {
   const animateFromXAxis = cfg.animateFromXAxis;
   const opacityCircles = cfg.marks.fillOpacity;
   const marksRadius = cfg.marks.r;
+  const dynamicWidth = cfg.dynamicWidth;
 
   // labels
   let xLabel = cfg.xLabel || xVariable;
@@ -73,10 +74,18 @@ export function drawVoronoiScatterplot(selector, inputData, options) {
 
   // Scatterplot
   const margin = cfg.margin;
-  const chartWidth = document.getElementById('chart').offsetWidth; 
-  const width = chartWidth - margin.left - margin.right;
+  const chartWidth = document.getElementById('chart').offsetWidth;
   const height = cfg.width * 0.25;
   // const maxDistanceFromPoint = 50;
+
+  let width;
+  if (typeof dynamicWidth !== 'undefined') {
+    // use a dynamic width derived from the window width
+    width = chartWidth - margin.left - margin.right;
+  } else {
+    // use width specified in the options passed in
+    width = cfg.width - margin.left - margin.right;
+  }
 
   const svg = div
     .append('svg')
