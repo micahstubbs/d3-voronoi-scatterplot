@@ -27,6 +27,7 @@ export function drawVoronoiScatterplot(selector, inputData, options) {
     hideXLabel: undefined,
     yVariable: 'y',
     idVariable: undefined,
+    voronoiStroke: 'none',
     marks: {
       r: 2,
       fillOpacity: 0.3
@@ -62,6 +63,7 @@ export function drawVoronoiScatterplot(selector, inputData, options) {
   const opacityCircles = cfg.marks.fillOpacity;
   const marksRadius = cfg.marks.r;
   const dynamicWidth = cfg.dynamicWidth;
+  const voronoiStroke = cfg.voronoiStroke;
 
   // labels
   let xLabel = cfg.xLabel || xVariable;
@@ -370,7 +372,8 @@ export function drawVoronoiScatterplot(selector, inputData, options) {
       yScale,
       width,
       height,
-      tip
+      tip,
+      voronoiStroke
     }
     drawVoronoiOverlay(wrapper, mergedSelectionData, voronoiOptions);
   }

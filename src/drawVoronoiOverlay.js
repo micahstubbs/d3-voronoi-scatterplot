@@ -20,6 +20,7 @@ export function drawVoronoiOverlay(selector, data, options) {
   const width = options.width;
   const height = options.height;
   const tip = options.tip;
+  const voronoiStroke = options.voronoiStroke;
   let idVariable = options.idVariable;
   if (typeof idVariable === 'undefined') idVariable = 'id';
 
@@ -76,8 +77,8 @@ export function drawVoronoiOverlay(selector, data, options) {
         }
         return 'voronoi';
       })
-      .style('stroke', 'lightblue') // I use this to look at how the cells are dispersed as a check
-      // .style('stroke', 'none')
+      // .style('stroke', 'lightblue') // I use this to look at how the cells are dispersed as a check
+      .style('stroke', voronoiStroke)
       .style('fill', 'none')
       .style('pointer-events', 'all')
       // .on('mouseover', tip.show)
