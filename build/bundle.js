@@ -684,12 +684,13 @@
 
     var xVariable = options.xVariable;
     var yVariable = options.yVariable;
-    var idVariable = options.idVariable || 'id';
     var xScale = options.xScale;
     var yScale = options.yScale;
     var width = options.width;
     var height = options.height;
     var tip = options.tip;
+    var idVariable = options.idVariable;
+    if (typeof idVariable === 'undefined') idVariable = 'id';
 
     var xAccessor = function xAccessor(d) {
       return xScale(d[xVariable]);
@@ -738,12 +739,15 @@
     // .attr('class', d => `voronoi ${d.datum[idVariable]}`)
     .attr('class', function (d) {
       if (typeof d !== 'undefined') {
-        return 'voronoi id' + xVariable + yVariable + d.datum[idVariable];
+        if (typeof d.datum[idVariable] !== 'undefined') {
+          return 'voronoi id' + xVariable + yVariable + d.datum[idVariable];
+        }
+        return 'voronoi id' + xVariable + yVariable + d[idVariable];
       }
       return 'voronoi';
-    })
-    // .style('stroke', 'lightblue') // I use this to look at how the cells are dispersed as a check
-    .style('stroke', 'none').style('fill', 'none').style('pointer-events', 'all')
+    }).style('stroke', 'lightblue') // I use this to look at how the cells are dispersed as a check
+    // .style('stroke', 'none')
+    .style('fill', 'none').style('pointer-events', 'all')
     // .on('mouseover', tip.show)
     // .on('mouseout', tip.hide);
     .on('mouseover', function (d, i, nodes) {
@@ -761,9 +765,21 @@
     function showTooltip(d, i, nodes) {
       // Save the circle element (so not the voronoi which is triggering the hover event)
       // in a variable by using the unique class of the voronoi (idVariable)
-      var elementSelector = '.marks.id' + xVariable + yVariable + d.datum[idVariable];
+      var elementSelector = void 0;
+      if (typeof d.datum[idVariable] !== 'undefined') {
+        elementSelector = '.marks.id' + xVariable + yVariable + d.datum[idVariable];
+      } else {
+        elementSelector = '.marks.id' + xVariable + yVariable + d[idVariable];
+      }
+
       // console.log('elementSelector', elementSelector);
-      var element = d3.selectAll('.marks.id' + xVariable + yVariable + d.datum[idVariable]);
+      var element = void 0;
+      if (typeof d.datum[idVariable] !== 'undefined') {
+        element = d3.selectAll('.marks.id' + xVariable + yVariable + d.datum[idVariable]);
+      } else {
+        element = d3.selectAll('.marks.id' + xVariable + yVariable + d[idVariable]);
+      }
+
       // console.log('element from showTooltip', element);
       // console.log('d from showTooltip', d);
       var pathStartX = Number(d.path.split('M')[1].split(',')[0]);
@@ -805,7 +821,12 @@
 
       // Save the circle element (so not the voronoi which is triggering the hover event)
       // in a variable by using the unique class of the voronoi (idVariable)
-      var element = d3.selectAll('.marks.id' + xVariable + yVariable + d.datum[idVariable]);
+      var element = void 0;
+      if (typeof d.datum[idVariable] !== 'undefined') {
+        element = d3.selectAll('.marks.id' + xVariable + yVariable + d.datum[idVariable]);
+      } else {
+        element = d3.selectAll('.marks.id' + xVariable + yVariable + d[idVariable]);
+      }
       // console.log('element from removeTooltip', element);
       // console.log('element.nodes()[0] from removeTooltip', element.nodes()[0]);
       var currentDOMNode = element.nodes()[0];
@@ -840,7 +861,7 @@
       animateFromXAxis: undefined,
       hideXLabel: undefined,
       yVariable: 'y',
-      idVariable: 'id',
+      idVariable: undefined,
       marks: {
         r: 2,
         fillOpacity: 0.3
@@ -933,11 +954,17 @@
     var data = _.cloneDeep(inputData);
     // console.log('data from scatterplot', data);
 
-    data.forEach(function (d) {
+    data.forEach(function (d, i) {
       numericVariables.forEach(function (e) {
         d[e] = Number(d[e]);
       });
+
+      if (typeof idVariable === 'undefined') {
+        data[i].id = '' + i;
+      }
     });
+    if (typeof idVariable === 'undefined') idVariable = 'id';
+    // console.log('data from drawVoronoiScatterplot', data);
 
     //
     // Scales
@@ -967,6 +994,7 @@
         return d[yVariable];
       })).nice();
     }
+    // console.log('yScale.domain()', yScale.domain());
 
     //
     // Axes

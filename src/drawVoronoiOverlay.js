@@ -15,12 +15,13 @@ export function drawVoronoiOverlay(selector, data, options) {
 
   const xVariable = options.xVariable;
   const yVariable = options.yVariable;
-  const idVariable = options.idVariable || 'id';
   const xScale = options.xScale;
   const yScale = options.yScale;
   const width = options.width;
   const height = options.height;
   const tip = options.tip;
+  let idVariable = options.idVariable;
+  if (typeof idVariable === 'undefined') idVariable = 'id';
 
   const xAccessor = d => xScale(d[xVariable]);
   const yAccessor = d => yScale(d[yVariable]);
@@ -68,12 +69,15 @@ export function drawVoronoiOverlay(selector, data, options) {
       // .attr('class', d => `voronoi ${d.datum[idVariable]}`)
       .attr('class', d => {
         if (typeof d !== 'undefined') {
-          return `voronoi id${xVariable}${yVariable}${d.datum[idVariable]}`;
+          if (typeof d.datum[idVariable] !== 'undefined') {
+            return `voronoi id${xVariable}${yVariable}${d.datum[idVariable]}`;
+          }
+          return `voronoi id${xVariable}${yVariable}${d[idVariable]}`;
         }
         return 'voronoi';
       })
-      // .style('stroke', 'lightblue') // I use this to look at how the cells are dispersed as a check
-      .style('stroke', 'none')
+      .style('stroke', 'lightblue') // I use this to look at how the cells are dispersed as a check
+      // .style('stroke', 'none')
       .style('fill', 'none')
       .style('pointer-events', 'all')
       // .on('mouseover', tip.show)
@@ -94,9 +98,21 @@ export function drawVoronoiOverlay(selector, data, options) {
   function showTooltip(d, i, nodes) {
     // Save the circle element (so not the voronoi which is triggering the hover event)
     // in a variable by using the unique class of the voronoi (idVariable)
-    const elementSelector = `.marks.id${xVariable}${yVariable}${d.datum[idVariable]}`;
+    let elementSelector;
+    if (typeof d.datum[idVariable] !== 'undefined') {
+      elementSelector = `.marks.id${xVariable}${yVariable}${d.datum[idVariable]}`;
+    } else {
+      elementSelector = `.marks.id${xVariable}${yVariable}${d[idVariable]}`;
+    }
+    
     // console.log('elementSelector', elementSelector);
-    const element = d3.selectAll(`.marks.id${xVariable}${yVariable}${d.datum[idVariable]}`);
+    let element;
+    if (typeof d.datum[idVariable] !== 'undefined') {
+      element = d3.selectAll(`.marks.id${xVariable}${yVariable}${d.datum[idVariable]}`);
+    } else {
+      element = d3.selectAll(`.marks.id${xVariable}${yVariable}${d[idVariable]}`);
+    }
+
     // console.log('element from showTooltip', element);
     // console.log('d from showTooltip', d);
     const pathStartX = Number(d.path.split('M')[1].split(',')[0]);
@@ -139,7 +155,12 @@ export function drawVoronoiOverlay(selector, data, options) {
 
     // Save the circle element (so not the voronoi which is triggering the hover event)
     // in a variable by using the unique class of the voronoi (idVariable)
-    const element = d3.selectAll(`.marks.id${xVariable}${yVariable}${d.datum[idVariable]}`);
+    let element;
+    if (typeof d.datum[idVariable] !== 'undefined') {
+      element = d3.selectAll(`.marks.id${xVariable}${yVariable}${d.datum[idVariable]}`);
+    } else {
+      element = d3.selectAll(`.marks.id${xVariable}${yVariable}${d[idVariable]}`);
+    }
     // console.log('element from removeTooltip', element);
     // console.log('element.nodes()[0] from removeTooltip', element.nodes()[0]);
     const currentDOMNode = element.nodes()[0];

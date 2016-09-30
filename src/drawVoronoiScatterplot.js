@@ -26,7 +26,7 @@ export function drawVoronoiScatterplot(selector, inputData, options) {
     animateFromXAxis: undefined,
     hideXLabel: undefined,
     yVariable: 'y',
-    idVariable: 'id',
+    idVariable: undefined,
     marks: {
       r: 2,
       fillOpacity: 0.3
@@ -46,7 +46,7 @@ export function drawVoronoiScatterplot(selector, inputData, options) {
   const xVariable = cfg.xVariable;
   const yVariable = cfg.yVariable;
   const rVariable = undefined;
-  const idVariable = cfg.idVariable;
+  let idVariable = cfg.idVariable;
   let groupByVariable = cfg.groupByVariable;
   const wrapperId = cfg.wrapperId;
   const wrapperLabel = cfg.wrapperLabel;
@@ -148,12 +148,18 @@ export function drawVoronoiScatterplot(selector, inputData, options) {
   let data = _.cloneDeep(inputData);
   // console.log('data from scatterplot', data);
 
-  data.forEach(d => {
+  data.forEach((d, i) => {
     numericVariables.forEach(e => {
       d[e] = Number(d[e]);
     })
-  })
 
+    if (typeof idVariable === 'undefined') {
+      data[i].id = `${i}`;
+    }
+  })
+  if (typeof idVariable === 'undefined') idVariable = 'id';
+  // console.log('data from drawVoronoiScatterplot', data);
+ 
   //
   // Scales
   //
@@ -185,6 +191,7 @@ export function drawVoronoiScatterplot(selector, inputData, options) {
       .domain(d3.extent(data, d => d[yVariable]))
       .nice();
   }
+  // console.log('yScale.domain()', yScale.domain());
 
   //
   // Axes
