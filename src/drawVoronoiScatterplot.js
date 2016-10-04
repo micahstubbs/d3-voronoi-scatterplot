@@ -26,6 +26,7 @@ export function drawVoronoiScatterplot(selector, inputData, options) {
     animateFromXAxis: undefined,
     hideXLabel: undefined,
     yVariable: 'y',
+    yExponent: 0.5,
     idVariable: undefined,
     voronoiStroke: 'none',
     marks: {
@@ -64,6 +65,8 @@ export function drawVoronoiScatterplot(selector, inputData, options) {
   const marksRadius = cfg.marks.r;
   const dynamicWidth = cfg.dynamicWidth;
   const voronoiStroke = cfg.voronoiStroke;
+  const yScaleType = cfg.yScaleType;
+  const yScaleExponent = cfg.yScaleExponent;
 
   // labels
   let xLabel = cfg.xLabel || xVariable;
@@ -159,6 +162,19 @@ export function drawVoronoiScatterplot(selector, inputData, options) {
       data[i].id = `${i}`;
     }
   })
+
+  // check to see if all points to be plotted are unique
+  const pointsData = data.map(d => ({
+    x: d[xVariable],
+    y: d[yVariable]
+  }));
+  const uniquePoints = _.uniqWith(pointsData, _.isEqual);
+  const uniquePointsLength = uniquePoints.length;
+  const dataLength = data.length;
+  console.log('uniquePointsLength', uniquePointsLength);
+  console.log('dataLength', dataLength);
+  console.log('all points unique?', uniquePointsLength === dataLength);
+
   if (typeof idVariable === 'undefined') idVariable = 'id';
   // console.log('data from drawVoronoiScatterplot', data);
  
@@ -171,9 +187,19 @@ export function drawVoronoiScatterplot(selector, inputData, options) {
     .range([0, width]);
 
   // Set the new y axis range
-  const yScale = d3.scaleLinear()
-    .range([height, 0]);
- 
+  let yScale;
+
+  switch (yScaleType) {
+    case 'power':
+      yScale = d3.scalePow()
+        .range([height, 0])
+        .exponent(yScaleExponent); 
+      break;
+    default:
+      yScale = d3.scaleLinear()
+        .range([height, 0]);
+  }
+
   if (typeof globalExtents !== 'undefined') {
     // retrieve global extents
     const xExtent = globalExtents[0];

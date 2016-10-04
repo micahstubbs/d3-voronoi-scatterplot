@@ -862,6 +862,7 @@
       animateFromXAxis: undefined,
       hideXLabel: undefined,
       yVariable: 'y',
+      yExponent: 0.5,
       idVariable: undefined,
       voronoiStroke: 'none',
       marks: {
@@ -902,6 +903,8 @@
     var marksRadius = cfg.marks.r;
     var dynamicWidth = cfg.dynamicWidth;
     var voronoiStroke = cfg.voronoiStroke;
+    var yScaleType = cfg.yScaleType;
+    var yScaleExponent = cfg.yScaleExponent;
 
     // labels
     var xLabel = cfg.xLabel || xVariable;
@@ -966,6 +969,21 @@
         data[i].id = '' + i;
       }
     });
+
+    // check to see if all points to be plotted are unique
+    var pointsData = data.map(function (d) {
+      return {
+        x: d[xVariable],
+        y: d[yVariable]
+      };
+    });
+    var uniquePoints = _.uniqWith(pointsData, _.isEqual);
+    var uniquePointsLength = uniquePoints.length;
+    var dataLength = data.length;
+    console.log('uniquePointsLength', uniquePointsLength);
+    console.log('dataLength', dataLength);
+    console.log('all points unique?', uniquePointsLength === dataLength);
+
     if (typeof idVariable === 'undefined') idVariable = 'id';
     // console.log('data from drawVoronoiScatterplot', data);
 
@@ -977,7 +995,15 @@
     var xScale = d3.scaleLinear().range([0, width]);
 
     // Set the new y axis range
-    var yScale = d3.scaleLinear().range([height, 0]);
+    var yScale = void 0;
+
+    switch (yScaleType) {
+      case 'power':
+        yScale = d3.scalePow().range([height, 0]).exponent(yScaleExponent);
+        break;
+      default:
+        yScale = d3.scaleLinear().range([height, 0]);
+    }
 
     if (typeof globalExtents !== 'undefined') {
       // retrieve global extents
