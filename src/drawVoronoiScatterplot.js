@@ -459,6 +459,7 @@ export function drawVoronoiScatterplot(selector, inputData, options) {
     .attr('text-anchor', 'end')
     .attr('dy', '0.35em')
     .style('font-size', `${mobileScreen ? 8 : 12}px`)
+    .style('font-weight', 600)
     // .attr('transform', 'translate(18, 0) rotate(-90)')
     .attr('transform', yLabelTranslate)
     .text(`${yLabelText}`);
