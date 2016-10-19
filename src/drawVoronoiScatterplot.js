@@ -1,5 +1,7 @@
 import { tooltip } from './tooltip'; 
-import { drawVoronoiOverlay } from './drawVoronoiOverlay'; 
+import { drawVoronoiOverlay } from './drawVoronoiOverlay';
+import { showTooltip } from './showTooltip';
+import { removeTooltip } from './removeTooltip';
 import * as d3 from 'd3';
 import _ from 'lodash';
 
@@ -7,6 +9,7 @@ export function drawVoronoiScatterplot(selector, inputData, options) {
   //
   // Set-up
   //
+  console.log('d3', d3);
 
   // vanilla JS window width and height
   const wV = window;
@@ -21,7 +24,7 @@ export function drawVoronoiScatterplot(selector, inputData, options) {
 
   // set default configuration
   const cfg = {
-    margin: { left: 120, top: 20, right: 80, bottom: 20 },
+    margin: { left: 120, top: 20, right: 80, bottom: 40 },
     width: 1000,
     animateFromXAxis: undefined,
     hideXLabel: undefined,
@@ -29,6 +32,7 @@ export function drawVoronoiScatterplot(selector, inputData, options) {
     yExponent: 0.5,
     idVariable: undefined,
     voronoiStroke: 'none',
+    maxDistanceFromPoint: 50,
     marks: {
       r: 2,
       fillOpacity: 0.3
@@ -67,6 +71,7 @@ export function drawVoronoiScatterplot(selector, inputData, options) {
   const voronoiStroke = cfg.voronoiStroke;
   const yScaleType = cfg.yScaleType;
   const yScaleExponent = cfg.yScaleExponent;
+  const maxDistanceFromPoint = cfg.maxDistanceFromPoint;
 
   // labels
   let xLabel = cfg.xLabel || xVariable;
@@ -386,22 +391,77 @@ export function drawVoronoiScatterplot(selector, inputData, options) {
         .attr('cy', d => yScale(d[yVariable]));
     }
 
+    ////////////////////////////////////////////////////////////  
+    ///// Capture mouse events and voronoi.find() the site /////
+    ////////////////////////////////////////////////////////////  
+
+    // Use the same variables of the data in the .x and .y as used in the cx and cy of the circle call
+    svg._tooltipped = svg._voronoi = null;
+    svg.on('mousemove', function() {
+      if (!svg._voronoi) {
+        console.log('computing the voronoi…');
+        svg._voronoi = d3.voronoi()
+          .x(function(d) { return xScale(d[xVariable]); })
+          .y(function(d) { return yScale(d[yVariable]); })
+          (data);
+        console.log('svg._voronoi', svg._voronoi);
+        console.log('…done.');
+      }
+      var p = d3.mouse(this), site;
+      p[0] -= margin.left;
+      p[1] -= margin.top;
+      // don't react if the mouse is close to one of the axis
+      if (p[0] < 5 || p[1] < 5) {
+        site = null;
+      } else {
+        site = svg._voronoi.find(p[0], p[1], maxDistanceFromPoint);
+      }
+      if (site !== svg._tooltipped) {
+        if (svg._tooltipped) {
+          const removeTooltipOptions = {
+            idVariable,
+            xVariable,
+            yVariable,
+            tip,
+            wrapper,
+            height,
+            width
+          };
+          removeTooltip(svg._tooltipped.data, undefined, removeTooltipOptions)
+        }
+
+        if (site) {
+          const showTooltipOptions = {
+            idVariable,
+            xVariable,
+            yVariable,
+            tip,
+            wrapper,
+            height,
+            width
+          };
+          showTooltip(site.data, undefined, showTooltipOptions);
+        }
+        svg._tooltipped = site;
+      }
+    });
+
     //
     // distance-limited Voronoi overlay
     //
 
-    const voronoiOptions = {
-      xVariable,
-      yVariable,
-      idVariable,
-      xScale,
-      yScale,
-      width,
-      height,
-      tip,
-      voronoiStroke
-    }
-    drawVoronoiOverlay(wrapper, mergedSelectionData, voronoiOptions);
+    // const voronoiOptions = {
+    //   xVariable,
+    //   yVariable,
+    //   idVariable,
+    //   xScale,
+    //   yScale,
+    //   width,
+    //   height,
+    //   tip,
+    //   voronoiStroke
+    // }
+    // drawVoronoiOverlay(wrapper, mergedSelectionData, voronoiOptions);
   }
 
   // call the update function once to kick things off
