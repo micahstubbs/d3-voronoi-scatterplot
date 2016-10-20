@@ -16244,7 +16244,7 @@ var     y0$3;
 
 
 
-    var d3$1 = Object.freeze({
+    var d3 = Object.freeze({
     	version: version,
     	bisect: bisectRight,
     	bisectRight: bisectRight,
@@ -17028,9 +17028,9 @@ var     y0$3;
 
         var element = void 0;
         if (typeof d.datum !== 'undefined' && typeof d.datum[idVariable] !== 'undefined') {
-            element = d3.selectAll('.marks.id' + xVariable + yVariable + d.datum[idVariable]);
+            element = selectAll('.marks.id' + xVariable + yVariable + d.datum[idVariable]);
         } else {
-            element = d3.selectAll('.marks.id' + xVariable + yVariable + d[idVariable]);
+            element = selectAll('.marks.id' + xVariable + yVariable + d[idVariable]);
         }
         var el = element._groups[0];
         //Define and show the tooltip
@@ -17054,12 +17054,12 @@ var     y0$3;
         //vertical line
         wrapper.append("line").attr("class", "guide").attr("x1", x).attr("x2", x).attr("y1", y).attr("y2", height + 20).style("stroke", color).style("opacity", 0).transition().duration(200).style("opacity", 0.5);
         //Value on the axis
-        wrapper.append("text").attr("class", "guide").attr("x", x).attr("y", height + 38).style("fill", color).style("opacity", 0).style("text-anchor", "middle").text("$ " + d3.format(".2s")(d[xVariable])).transition().duration(200).style("opacity", 0.5);
+        wrapper.append("text").attr("class", "guide").attr("x", x).attr("y", height + 38).style("fill", color).style("opacity", 0).style("text-anchor", "middle").text("$ " + format(".2s")(d[xVariable])).transition().duration(200).style("opacity", 0.5);
 
         //horizontal line
         wrapper.append("line").attr("class", "guide").attr("x1", x).attr("x2", -20).attr("y1", y).attr("y2", y).style("stroke", color).style("opacity", 0).transition().duration(200).style("opacity", 0.5);
         //Value on the axis
-        wrapper.append("text").attr("class", "guide").attr("x", -25).attr("y", y).attr("dy", "0.35em").style("fill", color).style("opacity", 0).style("text-anchor", "end").text(d3.format(".1f")(d[yVariable])).transition().duration(200).style("opacity", 0.5);
+        wrapper.append("text").attr("class", "guide").attr("x", -25).attr("y", y).attr("dy", "0.35em").style("fill", color).style("opacity", 0).style("text-anchor", "end").text(format(".1f")(d[yVariable])).transition().duration(200).style("opacity", 0.5);
     } // function showTooltip
 
     //Hide the tooltip when the mouse moves away
@@ -17082,9 +17082,9 @@ var     y0$3;
 
       var element = void 0;
       if (typeof d.datum !== 'undefined' && typeof d.datum[idVariable] !== 'undefined') {
-        element = d3.selectAll('.marks.id' + xVariable + yVariable + d.datum[idVariable]);
+        element = selectAll('.marks.id' + xVariable + yVariable + d.datum[idVariable]);
       } else {
-        element = d3.selectAll('.marks.id' + xVariable + yVariable + d[idVariable]);
+        element = selectAll('.marks.id' + xVariable + yVariable + d[idVariable]);
       }
 
       // Fade out the bright circle again
@@ -17094,14 +17094,14 @@ var     y0$3;
       tip.hide(d, i);
 
       //Fade out guide lines, then remove them
-      d3.selectAll(".guide").transition().duration(200).style("opacity", 0).remove();
+      selectAll(".guide").transition().duration(200).style("opacity", 0).remove();
     } //function removeTooltip
 
     function drawVoronoiScatterplot(selector, inputData, options) {
       //
       // Set-up
       //
-      console.log('d3', d3$1);
+      console.log('d3', d3);
 
       // vanilla JS window width and height
       var wV = window;

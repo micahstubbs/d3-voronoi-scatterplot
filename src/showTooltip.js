@@ -1,3 +1,5 @@
+import * as d3 from 'd3';
+
 // Show the tooltip on the hovered over circle
 export function showTooltip(d, i, options) {
   const idVariable = options.idVariable;

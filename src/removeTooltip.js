@@ -1,3 +1,5 @@
+import * as d3 from 'd3';
+
 //Hide the tooltip when the mouse moves away
 export function removeTooltip (d, i, options) {
   const idVariable = options.idVariable;
