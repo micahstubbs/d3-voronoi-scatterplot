@@ -271,13 +271,6 @@ export function drawVoronoiScatterplot(selector, inputData, options) {
   }
 
   //
-  // Tooltips
-  //
-
-  const tip = tooltip(tooltipVariables);
-  svg.call(tip);
-
-  //
   // Scatterplot Circles
   //
 
@@ -422,7 +415,6 @@ export function drawVoronoiScatterplot(selector, inputData, options) {
             idVariable,
             xVariable,
             yVariable,
-            tip,
             wrapper,
             height,
             width
@@ -435,7 +427,6 @@ export function drawVoronoiScatterplot(selector, inputData, options) {
             idVariable,
             xVariable,
             yVariable,
-            tip,
             wrapper,
             height,
             width

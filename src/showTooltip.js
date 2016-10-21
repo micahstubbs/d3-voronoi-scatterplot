@@ -1,7 +1,23 @@
 import * as d3 from 'd3';
+import * as jQuery from 'jquery';
+import { tooltip } from './tooltip';
+import { popover } from './popover';
+
 
 // Show the tooltip on the hovered over circle
 export function showTooltip(d, i, options) {
+  console.log('$ from showTooltip', $);
+  console.log('$.popover from showTooltip', $.popover);
+  console.log('jQuery.popover from showTooltip', jQuery.popover);
+  console.log('tooltip', tooltip);
+  console.log('popover', popover);
+  
+  tooltip(jQuery);
+  popover(jQuery);
+
+  console.log('$ from showTooltip', $);
+  console.log('$.popover from showTooltip', $.popover);
+
   const idVariable = options.idVariable;
   const xVariable = options.xVariable;
   const yVariable = options.yVariable;
@@ -32,7 +48,50 @@ export function showTooltip(d, i, options) {
   }
   const el = element._groups[0];
   //Define and show the tooltip
-  tip.show(d, i);
+  $(el).popover({
+    placement: 'auto top',
+    container: '#chart',
+    trigger: 'manual',
+    html : true,
+    content: () => {
+      // console.log('d from tooltip html function', d);
+      let allRows = '';
+      tooltipVariables.forEach((e) => {
+        let currentValue;
+        let f;
+        if (typeof d.datum !== 'undefined') {
+          f = d.datum;
+        } else {
+          f = d;
+        }
+        // now parse based on the format
+        if (typeof e.format !== 'undefined') {
+          if (e.type === 'time') {
+            // time formatting
+            const inputValue = new Date(Number(f[e.name]));
+            // TODO: handle case where date values are strings
+            const currentFormat = d3.timeFormat(e.format);
+            currentValue = currentFormat(inputValue);
+          } else {
+            // number formatting
+            const inputValue = Number(f[e.name])
+            const currentFormat = d3.format(e.format);
+            currentValue = currentFormat(inputValue);
+          }
+        } else {
+          // no formatting
+          currentValue = f[e.name];
+        }
+        const currentRow = `<span style='font-size: 11px; display: block; text-align: center;'>${e.name} ${currentValue}</span>`;
+        allRows = allRows.concat(currentRow);
+      })
+      return `<div style='background-color: white; padding: 5px; border-radius: 6px;
+        border-style: solid; border-color: #D1D1D1; border-width: 1px;'>
+        ${allRows}
+        </div>`
+    }
+  })
+  $(el).popover('show');
 
   //Make chosen circle more visible
   element.style("opacity", 1);
@@ -41,12 +100,6 @@ export function showTooltip(d, i, options) {
   const x = +element.attr("cx");
   const y = +element.attr("cy");
   const color = element.style("fill");
-
-  const offsetX = x - (width / 2);
-  const offsetY = y - 20;
-  // [top, left]
-  tip.offset([offsetY, offsetX]);
-
 
   //Append lines to bubbles that will be used to show the precise data points
   

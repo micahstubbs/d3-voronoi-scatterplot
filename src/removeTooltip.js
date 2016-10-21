@@ -1,4 +1,5 @@
 import * as d3 from 'd3';
+import * as $ from 'jQuery';
 
 //Hide the tooltip when the mouse moves away
 export function removeTooltip (d, i, options) {
@@ -35,7 +36,9 @@ export function removeTooltip (d, i, options) {
   element.style('fill-opacity', 0.3);
   
   //Hide tooltip
-  tip.hide(d, i);
+  $('.popover').each(function() {
+    $(this).remove();
+  }); 
     
   //Fade out guide lines, then remove them
   d3.selectAll(".guide")
