@@ -18044,17 +18044,10 @@ var 	y0$3;
 	});
 	});
 
-
-
-	var bsn = Object.freeze({
-	  default: bootstrapNative,
-	  __moduleExports: bootstrapNative
-	});
-
 	// Show the tooltip on the hovered over circle
 	function showTooltip(d, i, options, popoverTooltip) {
 	  // test the bootstrap.native import
-	  console.log('bsn', bsn);
+	  // console.log('bsn', bsn);
 	  var Popover = bootstrapNative.Popover;
 
 	  var idVariable = options.idVariable;
@@ -18075,6 +18068,7 @@ var 	y0$3;
 	  } else {
 	    elementSelector = '.marks.id' + xVariable + yVariable + d[idVariable];
 	  }
+	  console.log('elementSelector from showTooltip', elementSelector);
 
 	  var element = selectAll(elementSelector);
 

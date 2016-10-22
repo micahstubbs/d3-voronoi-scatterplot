@@ -28,6 +28,7 @@ export function showTooltip(d, i, options, popoverTooltip) {
   } else {
     elementSelector = `.marks.id${xVariable}${yVariable}${d[idVariable]}`;
   }
+  console.log('elementSelector from showTooltip', elementSelector);
 
   let element = d3.selectAll(elementSelector);
 
