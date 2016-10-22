@@ -10,6 +10,8 @@ export function showTooltip(d, i, options, popoverTooltip) {
   const idVariable = options.idVariable;
   const xVariable = options.xVariable;
   const yVariable = options.yVariable;
+  const xSelector = options.xSelector;
+  const ySelector = options.ySelector;
   const tip = options.tip;
   const wrapper = options.wrapper;
   const height = options.height;
@@ -24,9 +26,9 @@ export function showTooltip(d, i, options, popoverTooltip) {
       typeof d.datum !== 'undefined' &&
       typeof d.datum[idVariable] !== 'undefined'
   ) {
-    elementSelector = `.marks.id${xVariable}${yVariable}${d.datum[idVariable]}`;
+    elementSelector = `.marks.id${xSelector}${ySelector}${d.datum[idVariable]}`;
   } else {
-    elementSelector = `.marks.id${xVariable}${yVariable}${d[idVariable]}`;
+    elementSelector = `.marks.id${xSelector}${ySelector}${d[idVariable]}`;
   }
   console.log('elementSelector from showTooltip', elementSelector);
 

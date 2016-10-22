@@ -3,8 +3,8 @@ import * as d3 from 'd3';
 //Hide the tooltip when the mouse moves away
 export function removeTooltip (d, i, options, popoverTooltip) {
   const idVariable = options.idVariable;
-  const xVariable = options.xVariable;
-  const yVariable = options.yVariable;
+  const xSelector = options.xSelector;
+  const ySelector = options.ySelector;
   const tip = options.tip;
   const wrapper = options.wrapper;
   const height = options.height;
@@ -16,9 +16,9 @@ export function removeTooltip (d, i, options, popoverTooltip) {
       typeof d.datum !== 'undefined' &&
       typeof d.datum[idVariable] !== 'undefined'
   ) {
-    elementSelector = `.marks.id${xVariable}${yVariable}${d.datum[idVariable]}`;
+    elementSelector = `.marks.id${xSelector}${ySelector}${d.datum[idVariable]}`;
   } else {
-    elementSelector = `.marks.id${xVariable}${yVariable}${d[idVariable]}`;
+    elementSelector = `.marks.id${xSelector}${ySelector}${d[idVariable]}`;
   }
   
   let element;
@@ -26,9 +26,9 @@ export function removeTooltip (d, i, options, popoverTooltip) {
       typeof d.datum !== 'undefined' &&
       typeof d.datum[idVariable] !== 'undefined'
   ) {
-    element = d3.selectAll(`.marks.id${xVariable}${yVariable}${d.datum[idVariable]}`);
+    element = d3.selectAll(`.marks.id${xSelector}${ySelector}${d.datum[idVariable]}`);
   } else {
-    element = d3.selectAll(`.marks.id${xVariable}${yVariable}${d[idVariable]}`);
+    element = d3.selectAll(`.marks.id${xSelector}${ySelector}${d[idVariable]}`);
   }
     
   // Fade out the bright circle again

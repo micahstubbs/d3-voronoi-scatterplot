@@ -1,4 +1,3 @@
- import { drawVoronoiOverlay } from './drawVoronoiOverlay';
 import { showTooltip } from './showTooltip';
 import { removeTooltip } from './removeTooltip';
 import * as d3 from 'd3';
@@ -77,6 +76,10 @@ export function drawVoronoiScatterplot(selector, inputData, options) {
   const yDroplineTextFormat = cfg.yDroplineTextFormat;
   const maxDistanceFromPoint = cfg.maxDistanceFromPoint;
 
+  // strip out the white space
+  const xSelector = xVariable.replace(/\s/g, '');
+  const ySelector = yVariable.replace(/\s/g, '');
+
   // labels
   let xLabel = cfg.xLabel || xVariable;
   if (typeof xLabelDetail !== 'undefined') { 
@@ -112,7 +115,7 @@ export function drawVoronoiScatterplot(selector, inputData, options) {
 
   const wrapper = svg.append('g')
     .classed('chartWrapper', true)
-    .classed(`${xVariable}`, true)
+    .classed(`${xSelector}`, true)
     .attr('transform', `translate(${margin.left}, ${margin.top})`);
 
   if (typeof dependent !== 'undefined') {
@@ -326,7 +329,7 @@ export function drawVoronoiScatterplot(selector, inputData, options) {
       // .style('fill', 'black');
 
     enterSelection
-      .attr('class', (d) => `marks id${xVariable}${yVariable}${d[idVariable]}`)
+      .attr('class', (d) => `marks id${xSelector}${ySelector}${d[idVariable]}`)
       .style('fill-opacity', 0)
       .style('fill', d => {
         // console.log('d from style', d);
@@ -424,6 +427,8 @@ export function drawVoronoiScatterplot(selector, inputData, options) {
             idVariable,
             xVariable,
             yVariable,
+            xSelector,
+            ySelector,
             wrapper,
             height,
             width
@@ -436,6 +441,8 @@ export function drawVoronoiScatterplot(selector, inputData, options) {
             idVariable,
             xVariable,
             yVariable,
+            xSelector,
+            ySelector,
             wrapper,
             height,
             width,
@@ -449,23 +456,6 @@ export function drawVoronoiScatterplot(selector, inputData, options) {
         svg._tooltipped = site;
       }
     });
-
-    //
-    // distance-limited Voronoi overlay
-    //
-
-    // const voronoiOptions = {
-    //   xVariable,
-    //   yVariable,
-    //   idVariable,
-    //   xScale,
-    //   yScale,
-    //   width,
-    //   height,
-    //   tip,
-    //   voronoiStroke
-    // }
-    // drawVoronoiOverlay(wrapper, mergedSelectionData, voronoiOptions);
   }
 
   // call the update function once to kick things off
