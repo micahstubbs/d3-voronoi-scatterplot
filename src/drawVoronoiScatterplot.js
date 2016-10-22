@@ -271,13 +271,6 @@ export function drawVoronoiScatterplot(selector, inputData, options) {
   }
 
   //
-  // Tooltips
-  //
-
-  const tip = tooltip(tooltipVariables);
-  svg.call(tip);
-
-  //
   // Scatterplot Circles
   //
 
@@ -362,7 +355,10 @@ export function drawVoronoiScatterplot(selector, inputData, options) {
       .transition()
       .delay(marksDelay)
       .duration(2000)
-      .style('fill-opacity', opacityCircles);
+      .style('fill-opacity', opacityCircles)
+      .attr('data-content', 'some data content')
+      .attr('data-toggle', 'popover')
+      .attr('data-duration', 100);
       // .append('title')
       //   .text(d => `${d[idVariable]} ${d[xLabelDetail]}`);
 
@@ -393,7 +389,10 @@ export function drawVoronoiScatterplot(selector, inputData, options) {
 
     ////////////////////////////////////////////////////////////  
     ///// Capture mouse events and voronoi.find() the site /////
-    ////////////////////////////////////////////////////////////  
+    ////////////////////////////////////////////////////////////
+
+    // initialize variable for popover tooltip
+    let popoverTooltip;
 
     // Use the same variables of the data in the .x and .y as used in the cx and cy of the circle call
     svg._tooltipped = svg._voronoi = null;
@@ -422,12 +421,11 @@ export function drawVoronoiScatterplot(selector, inputData, options) {
             idVariable,
             xVariable,
             yVariable,
-            tip,
             wrapper,
             height,
             width
           };
-          removeTooltip(svg._tooltipped.data, undefined, removeTooltipOptions)
+          removeTooltip(svg._tooltipped.data, undefined, removeTooltipOptions, popoverTooltip)
         }
 
         if (site) {
@@ -435,12 +433,13 @@ export function drawVoronoiScatterplot(selector, inputData, options) {
             idVariable,
             xVariable,
             yVariable,
-            tip,
             wrapper,
             height,
-            width
+            width,
+            tooltipVariables
           };
-          showTooltip(site.data, undefined, showTooltipOptions);
+          // return the updated popoverTooltip
+          popoverTooltip = showTooltip(site.data, undefined, showTooltipOptions, popoverTooltip);
         }
         svg._tooltipped = site;
       }

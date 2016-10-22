@@ -3622,7 +3622,7 @@ var     tau$1 = 2 * pi$1;
       return none$1(series).reverse();
     }
 
-    function define (constructor, factory, prototype) {
+    function define$1 (constructor, factory, prototype) {
       constructor.prototype = factory.prototype = prototype;
       prototype.constructor = constructor;
     }
@@ -3798,7 +3798,7 @@ var     tau$1 = 2 * pi$1;
       yellowgreen: 0x9acd32
     };
 
-    define(Color, color, {
+    define$1(Color, color, {
       displayable: function displayable() {
         return this.rgb().displayable();
       },
@@ -3848,7 +3848,7 @@ var     tau$1 = 2 * pi$1;
       this.opacity = +opacity;
     }
 
-    define(Rgb, colorRgb, extend(Color, {
+    define$1(Rgb, colorRgb, extend(Color, {
       brighter: function brighter(k) {
         k = k == null ? _brighter : Math.pow(_brighter, k);
         return new Rgb(this.r * k, this.g * k, this.b * k, this.opacity);
@@ -3909,7 +3909,7 @@ var     tau$1 = 2 * pi$1;
       this.opacity = +opacity;
     }
 
-    define(Hsl, colorHsl, extend(Color, {
+    define$1(Hsl, colorHsl, extend(Color, {
       brighter: function brighter(k) {
         k = k == null ? _brighter : Math.pow(_brighter, k);
         return new Hsl(this.h, this.s, this.l * k, this.opacity);
@@ -3974,7 +3974,7 @@ var     tau$1 = 2 * pi$1;
       this.opacity = +opacity;
     }
 
-    define(Lab, lab, extend(Color, {
+    define$1(Lab, lab, extend(Color, {
       brighter: function brighter(k) {
         return new Lab(this.l + Kn * (k == null ? 1 : k), this.a, this.b, this.opacity);
       },
@@ -4027,7 +4027,7 @@ var     tau$1 = 2 * pi$1;
       this.opacity = +opacity;
     }
 
-    define(Hcl, colorHcl, extend(Color, {
+    define$1(Hcl, colorHcl, extend(Color, {
       brighter: function brighter(k) {
         return new Hcl(this.h, this.c, this.l + Kn * (k == null ? 1 : k), this.opacity);
       },
@@ -4073,7 +4073,7 @@ var     tau$1 = 2 * pi$1;
       this.opacity = +opacity;
     }
 
-    define(Cubehelix, cubehelix, extend(Color, {
+    define$1(Cubehelix, cubehelix, extend(Color, {
       brighter: function brighter(k) {
         k = k == null ? _brighter : Math.pow(_brighter, k);
         return new Cubehelix(this.h, this.s, this.l * k, this.opacity);
@@ -16629,348 +16629,1740 @@ var     y0$3;
     	geoTransverseMercatorRaw: transverseMercatorRaw
     });
 
-    function d3Tip () {
-
-      // Mappings to new version of d3
-      var d3 = {
-        select: select,
-        event: function event$$() {
-          return event;
-        },
-        selection: selection,
-        functor: function functor(v) {
-          return typeof v === "function" ? v : function () {
-            return v;
-          };
-        }
-      };
-
-      var direction = d3_tip_direction,
-          offset = d3_tip_offset,
-          html = d3_tip_html,
-          node = initNode(),
-          svg = null,
-          point = null,
-          target = null,
-          parent = null;
-
-      function tip(vis) {
-        svg = getSVGNode(vis);
-        point = svg.createSVGPoint();
+    // Native Javascript for Bootstrap 3 v1.0.51 | © dnp_theme | MIT-License
+    (function (root, factory) {
+      if (typeof define === 'function' && define.amd) {
+        // AMD support:
+        define([], factory);
+      } else if ((typeof module === 'undefined' ? 'undefined' : _typeof(module)) === 'object' && module.exports) {
+        // CommonJS-like:
+        module.exports = factory();
+      } else {
+        // Browser globals (root is window)
+        var bsn = factory();
+        window.Affix = bsn.Affix;
+        window.Alert = bsn.Alert;
+        window.Button = bsn.Button;
+        window.Carousel = bsn.Carousel;
+        window.Collapse = bsn.Collapse;
+        window.Dropdown = bsn.Dropdown;
+        window.Modal = bsn.Modal;
+        window.Popover = bsn.Popover;
+        window.ScrollSpy = bsn.ScrollSpy;
+        window.Tab = bsn.Tab;
+        window.Tooltip = bsn.Tooltip;
       }
+    })(undefined, function () {
+      // Native Javascript for Bootstrap 3 | Internal Utility Functions
+      // by dnp_theme
 
-      // Public - show the tooltip on the screen
-      //
-      // Returns a tip
-      tip.show = function () {
-        if (!parent) tip.parent(document.body);
-        var args = Array.prototype.slice.call(arguments);
-        // console.log('args from tip.show', args);
-        if (args[args.length - 1] instanceof SVGElement) target = args.pop();
-
-        var content = html.apply(this, args),
-            poffset = offset.apply(this, args),
-            dir = direction.apply(this, args),
-            nodel = getNodeEl(),
-            i = directions.length,
-            coords,
-            parentCoords = node.offsetParent.getBoundingClientRect();
-
-        nodel.html(content).style('position', 'absolute').style('opacity', 1).style('pointer-events', 'all');
-
-        while (i--) {
-          nodel.classed(directions[i], false);
-        }coords = direction_callbacks[dir].apply(this);
-        nodel.classed(dir, true).style('top', coords.top + poffset[0] - parentCoords.top + 'px').style('left', coords.left + poffset[1] - parentCoords.left + 'px');
-        // .style('top', (coords.top - parentCoords.top + 'px')
-        // .style('left', (coords.left - parentCoords.left) + 'px')
-
-        return tip;
-      };
-
-      // Public - hide the tooltip
-      //
-      // Returns a tip
-      tip.hide = function () {
-        var nodel = getNodeEl();
-        nodel.style('opacity', 0).style('pointer-events', 'none');
-        return tip;
-      };
-
-      // Public: Proxy attr calls to the d3 tip container.  Sets or gets attribute value.
-      //
-      // n - name of the attribute
-      // v - value of the attribute
-      //
-      // Returns tip or attribute value
-      tip.attr = function (n, v) {
-        if (arguments.length < 2 && typeof n === 'string') {
-          return getNodeEl().attr(n);
+      var addClass = function addClass(el, c) {
+        // where modern browsers fail, use classList
+        if (el.classList) {
+          el.classList.add(c);
         } else {
-          var args = Array.prototype.slice.call(arguments);
-          d3.selection.prototype.attr.apply(getNodeEl(), args);
+          el.className += ' ' + c;el.offsetWidth;
+        }
+      },
+          removeClass = function removeClass(el, c) {
+        if (el.classList) {
+          el.classList.remove(c);
+        } else {
+          el.className = el.className.replace(c, '').replace(/^\s+|\s+$/g, '');
+        }
+      },
+          isIE = new RegExp("MSIE ([0-9]{1,}[\.0-9]{0,})").exec(navigator.userAgent) != null ? parseFloat(RegExp.$1) : false,
+          getClosest = function getClosest(el, s) {
+        //el is the element and s the selector of the closest item to find
+        // source http://gomakethings.com/climbing-up-and-down-the-dom-tree-with-vanilla-javascript/
+        var f = s.charAt(0);
+        for (; el && el !== document; el = el.parentNode) {
+          // Get closest match
+          if (f === '.') {
+            // If selector is a class
+            if (document.querySelector(s) !== undefined) {
+              return el;
+            }
+          }
+          if (f === '#') {
+            // If selector is an ID
+            if (el.id === s.substr(1)) {
+              return el;
+            }
+          }
+        }
+        return false;
+      },
+          isElementInViewport = function isElementInViewport(t) {
+        // check if this.tooltip is in viewport
+        var r = t.getBoundingClientRect();
+        return r.top >= 0 && r.left >= 0 && r.bottom <= (window.innerHeight || document.documentElement.clientHeight) && r.right <= (window.innerWidth || document.documentElement.clientWidth);
+      };
+
+      // Native Javascript for Bootstrap 3 | Affix
+      // by dnp_theme
+
+      //AFFIX DEFINITION
+      var Affix = function Affix(element, options) {
+        options = options || {};
+
+        this.element = (typeof element === 'undefined' ? 'undefined' : _typeof(element)) === 'object' ? element : document.querySelector(element);
+        this.options = {};
+        this.options.target = options.target ? _typeof(options.target) === 'object' ? options.target : document.querySelector(options.target) : null; // target is an object
+        this.options.offsetTop = options.offsetTop && options.offsetTop ? options.offsetTop === 'function' ? options.offsetTop() : parseInt(options.offsetTop, 0) : 0; // offset option is an integer number or function to determine that number
+        this.options.offsetBottom = options.offsetBottom && options.offsetBottom ? options.offsetBottom === 'function' ? options.offsetBottom() : parseInt(options.offsetBottom, 0) : null;
+
+        if (!this.element && !(this.options.target || this.options.offsetTop || this.options.offsetBottom)) {
+          return;
         }
 
-        return tip;
+        var self = this;
+
+        this.processOffsetTop = function () {
+          if (this.options.target !== null) {
+            return this.options.target.getBoundingClientRect().top + this.scrollOffset();
+          } else if (this.options.offsetTop !== null) {
+            return this.options.offsetTop;
+          }
+        };
+        this.processOffsetBottom = function () {
+          if (this.options.offsetBottom !== null) {
+            var maxScroll = this.getMaxScroll();
+            return maxScroll - this.element.offsetHeight - this.options.offsetBottom;
+          }
+        };
+        this.checkPosition = function () {
+          this.getPinOffsetTop = this.processOffsetTop;
+          this.getPinOffsetBottom = this.processOffsetBottom;
+        };
+        this.scrollOffset = function () {
+          return window.pageYOffset || document.documentElement.scrollTop;
+        };
+        this.pinTop = function () {
+          if (!/\baffix/.test(this.element.className)) {
+            this.element.className += ' affix';
+            this.affixed = true;
+          }
+        };
+        this.unPinTop = function () {
+          if (/\baffix/.test(this.element.className)) {
+            this.element.className = this.element.className.replace(' affix', '');
+            this.affixed = false;
+          }
+        };
+        this.pinBottom = function () {
+          if (!/\baffix-bottom/.test(this.element.className)) {
+            this.element.className += ' affix-bottom';
+            this.affixedBottom = true;
+          }
+        };
+        this.unPinBottom = function () {
+          if (/\baffix-bottom/.test(this.element.className)) {
+            this.element.className = this.element.className.replace(' affix-bottom', '');
+            this.affixedBottom = false;
+          }
+        };
+        this.updatePin = function () {
+          if (this.affixed === false && parseInt(this.processOffsetTop(), 0) - parseInt(this.scrollOffset(), 0) < 0) {
+            this.pinTop();
+          } else if (this.affixed === true && parseInt(this.scrollOffset(), 0) <= parseInt(this.getPinOffsetTop(), 0)) {
+            this.unPinTop();
+          }
+
+          if (this.affixedBottom === false && parseInt(this.processOffsetBottom(), 0) - parseInt(this.scrollOffset(), 0) < 0) {
+            this.pinBottom();
+          } else if (this.affixedBottom === true && parseInt(this.scrollOffset(), 0) <= parseInt(this.getPinOffsetBottom(), 0)) {
+            this.unPinBottom();
+          }
+        };
+        this.updateAffix = function () {
+          // Unpin and check position again
+          this.unPinTop();
+          this.unPinBottom();
+          this.checkPosition();
+
+          this.updatePin(); // If any case update values again
+        };
+        this.getMaxScroll = function () {
+          return Math.max(document.body.scrollHeight, document.body.offsetHeight, document.documentElement.clientHeight, document.documentElement.scrollHeight, document.documentElement.offsetHeight);
+        };
+        this.scrollEvent = function () {
+          window.addEventListener('scroll', function () {
+            self.updatePin();
+          }, false);
+        };
+        this.resizeEvent = function () {
+          var dl = isIE && isIE < 10 ? 500 : 50;
+          window.addEventListener('resize', function () {
+            setTimeout(function () {
+              self.updateAffix();
+            }, dl);
+          }, false);
+        };
+        // init
+        this.affixed = false;
+        this.affixedBottom = false;
+        this.getPinOffsetTop = 0;
+        this.getPinOffsetBottom = null;
+
+        //actions
+        this.checkPosition();
+        this.updateAffix();
+        this.scrollEvent();
+        this.resizeEvent();
       };
 
-      // Public: Proxy style calls to the d3 tip container.  Sets or gets a style value.
-      //
-      // n - name of the property
-      // v - value of the property
-      //
-      // Returns tip or style property value
-      tip.style = function (n, v) {
-        // debugger;
-        if (arguments.length < 2 && typeof n === 'string') {
-          return getNodeEl().style(n);
-        } else {
-          var args = Array.prototype.slice.call(arguments);
-          if (args.length === 1) {
-            var styles = args[0];
-            Object.keys(styles).forEach(function (key) {
-              d3.selection.prototype.style.apply(getNodeEl(), [key, styles[key]]);
-            });
+      (function () {
+        // AFFIX DATA API
+        // =================
+        var Affixes = document.querySelectorAll('[data-spy="affix"]'),
+            i = 0,
+            afl = Affixes.length;
+        for (i; i < afl; i++) {
+          var item = Affixes[i],
+              options = {};
+          options.offsetTop = item.getAttribute('data-offset-top');
+          options.offsetBottom = item.getAttribute('data-offset-bottom');
+          options.target = item.getAttribute('data-target');
+
+          if (item && (options.offsetTop !== null || options.offsetBottom !== null || options.target !== null)) {
+            //don't do anything unless we have something valid to pin
+            new Affix(item, options);
+          }
+        }
+      })();
+      // Native Javascript for Bootstrap 3 | Alert
+      // by dnp_theme
+
+      // ALERT DEFINITION
+      // ===================
+      var Alert = function Alert(element) {
+        this.btn = (typeof element === 'undefined' ? 'undefined' : _typeof(element)) === 'object' ? element : document.querySelector(element);
+        this.alert = null;
+        this.duration = 150; // default alert transition duration
+
+        var self = this;
+
+        this.close = function (e) {
+          var target = e.target;
+          self.btn = target.getAttribute('data-dismiss') === 'alert' && target.className === 'close' ? target : target.parentNode;
+          self.alert = self.btn.parentNode;
+
+          if (self.alert !== null && self.btn.getAttribute('data-dismiss') === 'alert' && /\bin/.test(self.alert.className)) {
+            self.alert.className = self.alert.className.replace(' in', '');
+            setTimeout(function () {
+              self.alert && self.alert.parentNode.removeChild(self.alert);
+            }, self.duration);
+          }
+        };
+        document.addEventListener('click', this.close, false); //delegate to all alerts, including those inserted later into the DOM
+      };
+
+      (function () {
+        // ALERT DATA API
+        // =================
+        var Alerts = document.querySelectorAll('[data-dismiss="alert"]'),
+            i = 0,
+            all = Alerts.length;
+        for (i; i < all; i++) {
+          new Alert(Alerts[i]);
+        }
+      })();
+      // Native Javascript for Bootstrap 3 | Button
+      // by dnp_theme
+
+      // BUTTON DEFINITION
+      // ===================
+      var Button = function Button(element, option) {
+        this.btn = (typeof element === 'undefined' ? 'undefined' : _typeof(element)) === 'object' ? element : document.querySelector(element);
+        this.option = typeof option === 'string' ? option : null;
+
+        var self = this,
+            changeEvent = 'CustomEvent' in window && window.dispatchEvent ? new CustomEvent('bs.button.change') : null; // The custom event that will be triggered on demand
+
+        // assign event to a trigger function
+        function triggerChange(t) {
+          if (changeEvent) {
+            t.dispatchEvent(changeEvent);
           }
         }
 
-        return tip;
+        this.setState = function () {
+          if (this.option === 'loading') {
+            addClass(this.btn, 'disabled');
+            this.btn.setAttribute('disabled', 'disabled');
+          }
+          this.btn.innerHTML = this.state;
+        };
+
+        this.reset = function () {
+          if (/\bdisabled/.test(this.btn.className) || this.btn.getAttribute('disabled') === 'disabled') {
+            removeClass(this.btn, 'disabled');
+            this.btn.removeAttribute('disabled');
+          }
+          this.btn.innerHTML = this.btn.getAttribute('data-original-text');
+        };
+
+        this.toggle = function (e) {
+          var parent = e.target.parentNode,
+              label = e.target.tagName === 'LABEL' ? e.target : parent.tagName === 'LABEL' ? parent : null; // the .btn label
+
+          if (!label) return; //react if a label or its immediate child is clicked
+
+          var target = this,
+              //e.currentTarget || e.srcElement; // the button group, the target of the handler function
+          labels = target.querySelectorAll('.btn'),
+              ll = labels.length,
+              i = 0,
+              // all the button group buttons
+          input = label.getElementsByTagName('INPUT')[0];
+
+          if (!input) return; //return if no input found
+
+          //manage the dom manipulation
+          if (input.type === 'checkbox') {
+            //checkboxes
+            if (!input.checked) {
+              addClass(label, 'active');
+              input.getAttribute('checked');
+              input.setAttribute('checked', 'checked');
+              input.checked = true;
+            } else {
+              removeClass(label, 'active');
+              input.getAttribute('checked');
+              input.removeAttribute('checked');
+              input.checked = false;
+            }
+            triggerChange(input); //trigger the change for the input
+            triggerChange(self.btn); //trigger the change for the btn-group
+          }
+
+          if (input.type === 'radio') {
+            // radio buttons
+            if (!input.checked) {
+              // don't trigger if already active
+              addClass(label, 'active');
+              input.setAttribute('checked', 'checked');
+              input.checked = true;
+              triggerChange(self.btn);
+              triggerChange(input); //trigger the change
+
+              for (i; i < ll; i++) {
+                var l = labels[i];
+                if (l !== label && /\bactive/.test(l.className)) {
+                  var inp = l.getElementsByTagName('INPUT')[0];
+                  removeClass(l, 'active');
+                  inp.removeAttribute('checked');
+                  inp.checked = false;
+                  triggerChange(inp); // trigger the change
+                }
+              }
+            }
+          }
+        };
+        // init
+        if (/\bbtn/.test(this.btn.className)) {
+          if (this.option && this.option !== 'reset') {
+
+            this.state = this.btn.getAttribute('data-' + this.option + '-text') || null;
+
+            !this.btn.getAttribute('data-original-text') && this.btn.setAttribute('data-original-text', self.btn.innerHTML.replace(/^\s+|\s+$/g, ''));
+            this.setState();
+          } else if (this.option === 'reset') {
+            this.reset();
+          }
+        }
+        if (/\bbtn-group/.test(this.btn.className)) {
+          this.btn.addEventListener('click', this.toggle, false);
+        }
       };
 
-      // Public: Sets or gets the parent of the tooltip element
-      //
-      // v - New parent for the tip
-      //
-      // Returns parent element or tip
-      tip.parent = function (v) {
-        if (!arguments.length) return parent;
-        parent = v || document.body;
-        // console.log('parent from tip.parent', parent);
-        parent.appendChild(node);
-
-        // Make sure offsetParent has a position so the tip can be
-        // based from it. Mainly a concern with <body>.
-        var offsetParent = d3.select(node.offsetParent);
-        if (offsetParent.style('position') === 'static') {
-          offsetParent.style('position', 'relative');
+      (function () {
+        // BUTTON DATA API
+        // =================
+        var Buttons = document.querySelectorAll('[data-toggle=button]'),
+            i = 0,
+            btl = Buttons.length;
+        for (i; i < btl; i++) {
+          new Button(Buttons[i]);
         }
 
-        return tip;
-      };
-
-      // Public: Set or get the direction of the tooltip
-      //
-      // v - One of n(north), s(south), e(east), or w(west), nw(northwest),
-      //     sw(southwest), ne(northeast) or se(southeast)
-      //
-      // Returns tip or direction
-      tip.direction = function (v) {
-        if (!arguments.length) return direction;
-        direction = v == null ? v : d3.functor(v);
-
-        return tip;
-      };
-
-      // Public: Sets or gets the offset of the tip
-      //
-      // v - Array of [x, y] offset
-      //
-      // Returns offset or
-      tip.offset = function (v) {
-        if (!arguments.length) return offset;
-        offset = v == null ? v : d3.functor(v);
-
-        return tip;
-      };
-
-      // Public: sets or gets the html value of the tooltip
-      //
-      // v - String value of the tip
-      //
-      // Returns html value or tip
-      tip.html = function (v) {
-        if (!arguments.length) return html;
-        html = v == null ? v : d3.functor(v);
-
-        return tip;
-      };
-
-      // Public: destroys the tooltip and removes it from the DOM
-      //
-      // Returns a tip
-      tip.destroy = function () {
-        if (node) {
-          getNodeEl().remove();
-          node = null;
+        var ButtonGroups = document.querySelectorAll('[data-toggle=buttons]'),
+            j = 0,
+            bgl = ButtonGroups.length;
+        for (j; j < bgl; j++) {
+          new Button(ButtonGroups[j]);
         }
-        return tip;
-      };
+      })();
+      // Native Javascript for Bootstrap 3 | Carousel
+      // by dnp_theme
 
-      function d3_tip_direction() {
-        return 'n';
-      }
-      function d3_tip_offset() {
-        return [0, 0];
-      }
-      function d3_tip_html() {
-        return ' ';
-      }
+      // CAROUSEL DEFINITION
+      // ===================
+      var Carousel = function Carousel(element, options) {
+        options = options || {};
 
-      var direction_callbacks = {
-        n: direction_n,
-        s: direction_s,
-        e: direction_e,
-        w: direction_w,
-        nw: direction_nw,
-        ne: direction_ne,
-        sw: direction_sw,
-        se: direction_se
-      };
+        this.carousel = (typeof element === 'undefined' ? 'undefined' : _typeof(element)) === 'object' ? element : document.querySelector(element);
+        this.options = {}; //replace extend
+        this.options.keyboard = options.keyboard === 'true' ? true : false;
+        this.options.pause = options.pause ? options.pause : 'hover'; // false / hover
 
-      var directions = Object.keys(direction_callbacks);
+        // bootstrap carousel default transition duration / option
+        this.duration = 600;
+        this.options.duration = isIE && isIE < 10 ? 0 : parseInt(options.duration) || this.duration;
 
-      function direction_n() {
-        var bbox = getScreenBBox();
-        return {
-          top: bbox.n.y - node.offsetHeight,
-          left: bbox.n.x - node.offsetWidth / 2
-        };
-      }
+        var items = this.carousel.querySelectorAll('.item'),
+            il = items.length; //this is an object
+        this.controls = this.carousel.querySelectorAll('.carousel-control');
+        this.prev = this.controls[0];
+        this.next = this.controls[1];
+        this.slides = [];for (var i = 0; i < il; i++) {
+          this.slides.push(items[i]);
+        } // this is an array
+        this.indicator = this.carousel.querySelector(".carousel-indicators"); // object
+        this.indicators = this.carousel.querySelectorAll(".carousel-indicators li"); // object
+        this.total = this.slides.length;
+        this.timer = null;
+        this.direction = null;
+        this.index = 0;
 
-      function direction_s() {
-        var bbox = getScreenBBox();
-        return {
-          top: bbox.s.y,
-          left: bbox.s.x - node.offsetWidth / 2
-        };
-      }
+        var self = this;
 
-      function direction_e() {
-        var bbox = getScreenBBox();
-        return {
-          top: bbox.e.y - node.offsetHeight / 2,
-          left: bbox.e.x
-        };
-      }
-
-      function direction_w() {
-        var bbox = getScreenBBox();
-        return {
-          top: bbox.w.y - node.offsetHeight / 2,
-          left: bbox.w.x - node.offsetWidth
-        };
-      }
-
-      function direction_nw() {
-        var bbox = getScreenBBox();
-        return {
-          top: bbox.nw.y - node.offsetHeight,
-          left: bbox.nw.x - node.offsetWidth
-        };
-      }
-
-      function direction_ne() {
-        var bbox = getScreenBBox();
-        return {
-          top: bbox.ne.y - node.offsetHeight,
-          left: bbox.ne.x
-        };
-      }
-
-      function direction_sw() {
-        var bbox = getScreenBBox();
-        return {
-          top: bbox.sw.y,
-          left: bbox.sw.x - node.offsetWidth
-        };
-      }
-
-      function direction_se() {
-        var bbox = getScreenBBox();
-        return {
-          top: bbox.se.y,
-          left: bbox.e.x
-        };
-      }
-
-      function initNode() {
-        var node = d3.select(document.createElement('div'));
-        node.style('position', 'absolute').style('top', 0).style('opacity', 0).style('pointer-events', 'none').style('box-sizing', 'border-box');
-
-        return node.node();
-      }
-
-      function getSVGNode(el) {
-        el = el.node();
-        if (el.tagName.toLowerCase() === 'svg') return el;
-
-        return el.ownerSVGElement;
-      }
-
-      function getNodeEl() {
-        if (node === null) {
-          node = initNode();
-          // re-add node to DOM
-          document.body.appendChild(node);
-        };
-        return d3.select(node);
-      }
-
-      // Private - gets the screen coordinates of a shape
-      //
-      // Given a shape on the screen, will return an SVGPoint for the directions
-      // n(north), s(south), e(east), w(west), ne(northeast), se(southeast), nw(northwest),
-      // sw(southwest).
-      //
-      //    +-+-+
-      //    |   |
-      //    +   +
-      //    |   |
-      //    +-+-+
-      //
-      // Returns an Object {n, s, e, w, nw, sw, ne, se}
-      function getScreenBBox() {
-        var targetel = target || d3.event().target;
-
-        while ('undefined' === typeof targetel.getScreenCTM && 'undefined' === targetel.parentNode) {
-          targetel = targetel.parentNode;
+        if (options.interval === 'false') {
+          this.options.interval = false;
+        } else {
+          this.options.interval = parseInt(options.interval) || 5000;
         }
 
-        var bbox = {},
-            matrix = targetel.getScreenCTM(),
-            tbbox = targetel.getBBox(),
-            width = tbbox.width,
-            height = tbbox.height,
-            x = tbbox.x,
-            y = tbbox.y;
+        this.cycle = function (e) {
 
-        point.x = x;
-        point.y = y;
-        bbox.nw = point.matrixTransform(matrix);
-        point.x += width;
-        bbox.ne = point.matrixTransform(matrix);
-        point.y += height;
-        bbox.se = point.matrixTransform(matrix);
-        point.x -= width;
-        bbox.sw = point.matrixTransform(matrix);
-        point.y -= height / 2;
-        bbox.w = point.matrixTransform(matrix);
-        point.x += width;
-        bbox.e = point.matrixTransform(matrix);
-        point.x -= width / 2;
-        point.y -= height / 2;
-        bbox.n = point.matrixTransform(matrix);
-        point.y += height;
-        bbox.s = point.matrixTransform(matrix);
+          this.direction = 'left';
+          this.timer = setInterval(function () {
+            self.index++;
+            if (self.index == self.slides.length) {
+              self.index = 0;
+            }
+            self._slideTo(self.index, e);
+          }, this.options.interval);
+        };
+        this.pause = function () {
+          var pauseHandler = function pauseHandler() {
+            if (self.options.interval !== false && !/\bpaused/.test(self.carousel.className)) {
+              self.carousel.className += ' paused';
+              clearInterval(self.timer);
+              self.timer = null;
+            }
+          };
+          var resumeHandler = function resumeHandler() {
+            if (self.options.interval !== false && /\bpaused/.test(self.carousel.className)) {
+              self.cycle();
+              self.carousel.className = self.carousel.className.replace(/\bpaused/, '');
+            }
+          };
+          self.carousel.addEventListener("mouseenter", pauseHandler, false);
+          self.carousel.addEventListener("mouseleave", resumeHandler, false);
+          self.carousel.addEventListener("touchstart", pauseHandler, false);
+          self.carousel.addEventListener("touchend", resumeHandler, false);
+        };
+        this._slideTo = function (next, e) {
+          var active = this._getActiveIndex(); // the current active
+          //determine type
+          var direction = this.direction;
+          var dr = direction === 'left' ? 'next' : 'prev';
+          var slid = null,
+              slide = null;
 
-        return bbox;
+          //register events
+          if ('CustomEvent' in window && window.dispatchEvent) {
+            slid = new CustomEvent("slid.bs.carousel");
+            slide = new CustomEvent("slide.bs.carousel");
+          }
+          if (slide) {
+            this.carousel.dispatchEvent(slide);
+          } //here we go with the slide
+
+          this._removeEventListeners();
+          clearInterval(this.timer);
+          this.timer = null;
+          this._curentPage(this.indicators[next]);
+
+          if (/\bslide/.test(this.carousel.className) && !(isIE && isIE < 10)) {
+            this.slides[next].className += ' ' + dr;
+            this.slides[next].offsetWidth;
+            this.slides[next].className += ' ' + direction;
+            this.slides[active].className += ' ' + direction;
+
+            setTimeout(function () {
+              //we're gonna fake waiting for the animation to finish, cleaner and better
+              self._addEventListeners();
+
+              self.slides[next].className += ' active';
+              self.slides[active].className = self.slides[active].className.replace(' active', '');
+
+              self.slides[next].className = self.slides[next].className.replace(' ' + dr, '');
+              self.slides[next].className = self.slides[next].className.replace(' ' + direction, '');
+              self.slides[active].className = self.slides[active].className.replace(' ' + direction, '');
+
+              if (self.options.interval !== false && !/\bpaused/.test(self.carousel.className)) {
+                clearInterval(self.timer);self.cycle();
+              }
+              if (slid) {
+                self.carousel.dispatchEvent(slid);
+              } //here we go with the slid
+            }, this.options.duration + 100);
+          } else {
+            this.slides[next].className += ' active';
+            this.slides[next].offsetWidth;
+            this.slides[active].className = this.slides[active].className.replace(' active', '');
+            setTimeout(function () {
+              self._addEventListeners();
+              if (self.options.interval !== false && !/\bpaused/.test(self.carousel.className)) {
+                clearInterval(self.timer);self.cycle();
+              }
+              if (slid) {
+                self.carousel.dispatchEvent(slid);
+              } //here we go with the slid
+            }, this.options.duration + 100);
+          }
+        };
+        this._addEventListeners = function () {
+          this.next && this.next.addEventListener("click", this.controlsHandler, false);
+          this.prev && this.prev.addEventListener("click", this.controlsHandler, false);
+
+          this.indicator && this.indicator.addEventListener("click", this.indicatorHandler, false);
+
+          this.options.keyboard === true && window.addEventListener('keydown', this.keyHandler, false);
+        };
+        this._removeEventListeners = function () {
+          // prevent mouse bubbles while animating
+          this.next && this.next.removeEventListener("click", this.controlsHandler, false);
+          this.prev && this.prev.removeEventListener("click", this.controlsHandler, false);
+
+          this.indicator && this.indicator.removeEventListener("click", this.indicatorHandler, false);
+
+          this.options.keyboard === true && window.removeEventListener('keydown', this.keyHandler, false);
+        };
+        this._getActiveIndex = function () {
+          return this.slides.indexOf(this.carousel.querySelector('.item.active'));
+        };
+        this._curentPage = function (p) {
+          for (var i = 0; i < this.indicators.length; ++i) {
+            var a = this.indicators[i];
+            a.className = "";
+          }
+          if (p) p.className = "active";
+        };
+        this.indicatorHandler = function (e) {
+          e.preventDefault();
+          var target = e.target;
+          var active = self._getActiveIndex(); // the current active
+
+          if (target && !/\bactive/.test(target.className) && target.getAttribute('data-slide-to')) {
+            var n = parseInt(target.getAttribute('data-slide-to'), 10);
+
+            self.index = n;
+
+            if (self.index == 0) {
+              self.index = 0;
+            } else if (self.index == self.total - 1) {
+              self.index = self.total - 1;
+            }
+
+            //determine direction first
+            if (active < self.index || active === self.total - 1 && self.index === 0) {
+              self.direction = 'left'; // next
+            } else if (active > self.index || active === 0 && self.index === self.total - 1) {
+              self.direction = 'right'; // prev
+            }
+          } else {
+            return false;
+          }
+
+          self._slideTo(self.index, e); //Do the slide
+        };
+        this.controlsHandler = function (e) {
+          var target = e.currentTarget || e.srcElement;
+
+          if (target === self.next) {
+            self.index++;
+            self.direction = 'left'; //set direction first
+
+            if (self.index == self.total - 1) {
+              self.index = self.total - 1;
+            } else if (self.index == self.total) {
+              self.index = 0;
+            }
+          } else if (target === self.prev) {
+            self.index--;
+            self.direction = 'right'; //set direction first
+
+            if (self.index == 0) {
+              self.index = 0;
+            } else if (self.index < 0) {
+              self.index = self.total - 1;
+            }
+          }
+
+          self._slideTo(self.index, e); //Do the slide
+        };
+        this.keyHandler = function (e) {
+          switch (e.which) {
+            case 39:
+              e.preventDefault();
+              self.index++;
+              self.direction = 'left';
+              if (self.index == self.total - 1) {
+                self.index = self.total - 1;
+              } else if (self.index == self.total) {
+                self.index = 0;
+              }
+              break;
+            case 37:
+              e.preventDefault();
+              self.index--;
+              self.direction = 'right';
+              if (self.index == 0) {
+                self.index = 0;
+              } else if (self.index < 0) {
+                self.index = self.total - 1;
+              }
+              break;
+            default:
+              return;
+          }
+          self._slideTo(self.index, e); //Do the slide
+        };
+
+        // init
+        if (this.options.interval !== false) {
+          this.cycle();
+        }
+
+        if (this.options && this.options.pause === 'hover' && this.options.interval !== false) {
+          this.pause();
+        }
+        this._addEventListeners();
+        this.next && this.next.addEventListener("click", function (e) {
+          e.preventDefault();
+        }, false);
+        this.prev && this.prev.addEventListener("click", function (e) {
+          e.preventDefault();
+        }, false);
+      };
+
+      (function () {
+        // CAROUSEL DATA API
+        // =================
+        var Carousels = document.querySelectorAll('[data-ride="carousel"]'),
+            i = 0,
+            crl = Carousels.length;
+        for (i; i < crl; i++) {
+          var c = Carousels[i],
+              options = {};
+          options.interval = c.getAttribute('data-interval') && c.getAttribute('data-interval');
+          options.pause = c.getAttribute('data-pause') && c.getAttribute('data-pause') || 'hover';
+          options.keyboard = c.getAttribute('data-keyboard') && c.getAttribute('data-keyboard') || false;
+          options.duration = c.getAttribute('data-duration') && c.getAttribute('data-duration') || false;
+          new Carousel(c, options);
+        }
+      })();
+      // Native Javascript for Bootstrap 3 | Collapse
+      // by dnp_theme
+
+      // COLLAPSE DEFINITION
+      // ===================
+      var Collapse = function Collapse(element, options) {
+        options = options || {};
+
+        this.btn = (typeof element === 'undefined' ? 'undefined' : _typeof(element)) === 'object' ? element : document.querySelector(element);
+        this.accordion = null;
+        this.collapse = null;
+        this.duration = 300; // default collapse transition duration
+        this.options = {};
+        this.options.duration = isIE && isIE < 10 ? 0 : options.duration || this.duration;
+        var self = this;
+        var getOuterHeight = function getOuterHeight(el) {
+          var s = el && (el.currentStyle || window.getComputedStyle(el)),
+              // the getComputedStyle polyfill would do this for us, but we want to make sure it does
+          btp = /px/.test(s.borderTopWidth) ? Math.round(s.borderTopWidth.replace('px', '')) : 0,
+              mtp = /px/.test(s.marginTop) ? Math.round(s.marginTop.replace('px', '')) : 0,
+              mbp = /px/.test(s.marginBottom) ? Math.round(s.marginBottom.replace('px', '')) : 0,
+              mte = /em/.test(s.marginTop) ? Math.round(s.marginTop.replace('em', '') * parseInt(s.fontSize)) : 0,
+              mbe = /em/.test(s.marginBottom) ? Math.round(s.marginBottom.replace('em', '') * parseInt(s.fontSize)) : 0;
+          return el.clientHeight + parseInt(btp) + parseInt(mtp) + parseInt(mbp) + parseInt(mte) + parseInt(mbe); //we need an accurate margin value
+        };
+
+        this.toggle = function (e) {
+          e.preventDefault();
+
+          if (!/\bin/.test(self.collapse.className)) {
+            self.open();
+          } else {
+            self.close();
+          }
+        }, this.close = function () {
+          this._close(this.collapse);
+          addClass(this.btn, 'collapsed');
+        }, this.open = function () {
+          this._open(this.collapse);
+          removeClass(this.btn, 'collapsed');
+
+          if (this.accordion !== null) {
+            var active = this.accordion.querySelectorAll('.collapse.in'),
+                al = active.length,
+                i = 0;
+            for (i; i < al; i++) {
+              if (active[i] !== this.collapse) this._close(active[i]);
+            }
+          }
+        };
+        this._open = function (c) {
+          this.removeEvent();
+          addClass(c, 'in');
+          c.setAttribute('aria-expanded', 'true');
+          addClass(c, 'collapsing');
+          setTimeout(function () {
+            c.style.height = self.getMaxHeight(c) + 'px';
+            c.style.overflowY = 'hidden';
+          }, 0);
+          setTimeout(function () {
+            c.style.height = '';
+            c.style.overflowY = '';
+            removeClass(c, 'collapsing');
+            self.addEvent();
+          }, this.options.duration);
+        };
+        this._close = function (c) {
+          this.removeEvent();
+          c.setAttribute('aria-expanded', 'false');
+          c.style.height = this.getMaxHeight(c) + 'px';
+          setTimeout(function () {
+            c.style.height = '0px';
+            c.style.overflowY = 'hidden';
+            addClass(c, 'collapsing');
+          }, 0);
+
+          setTimeout(function () {
+            removeClass(c, 'collapsing');
+            removeClass(c, 'in');
+            c.style.overflowY = '';
+            c.style.height = '';
+            self.addEvent();
+          }, this.options.duration);
+        };
+        this.getMaxHeight = function (l) {
+          // get collapse trueHeight and border
+          var h = 0;
+          for (var k = 0, ll = l.children.length; k < ll; k++) {
+            h += getOuterHeight(l.children[k]);
+          }
+          return h;
+        };
+        this.removeEvent = function () {
+          this.btn.removeEventListener('click', this.toggle, false);
+        };
+        this.addEvent = function () {
+          this.btn.addEventListener('click', this.toggle, false);
+        };
+        this.getTarget = function () {
+          var t = this.btn,
+              h = t.href && t.getAttribute('href').replace('#', ''),
+              d = t.getAttribute('data-target') && t.getAttribute('data-target'),
+              id = h || d && /#/.test(d) && d.replace('#', ''),
+              cl = d && d.charAt(0) === '.' && d,
+              //the navbar collapse trigger targets a class
+          c = id && document.getElementById(id) || cl && document.querySelector(cl);
+          return c;
+        };
+
+        // init
+        this.addEvent();
+        this.collapse = this.getTarget();
+        this.accordion = this.btn.getAttribute('data-parent') && getClosest(this.btn, this.btn.getAttribute('data-parent'));
+      };
+
+      (function () {
+        // COLLAPSE DATA API
+        // =================
+        var Collapses = document.querySelectorAll('[data-toggle="collapse"]'),
+            i = 0,
+            cll = Collapses.length;
+        for (i; i < cll; i++) {
+          var item = Collapses[i],
+              options = {};
+          options.duration = item.getAttribute('data-duration');
+          new Collapse(item, options);
+        }
+      })();
+      // Native Javascript for Bootstrap 3 | Dropdown
+      // by dnp_theme
+
+      // DROPDOWN DEFINITION
+      // ===================
+      var Dropdown = function Dropdown(element) {
+        this.menu = (typeof element === 'undefined' ? 'undefined' : _typeof(element)) === 'object' ? element : document.querySelector(element);
+        var self = this;
+
+        this.handle = function (e) {
+          // fix some Safari bug with <button>
+          var target = e.target || e.currentTarget,
+              children = [],
+              c = self.menu.parentNode.getElementsByTagName('*');
+          /\#$/g.test(target.href) && e.preventDefault();
+
+          for (var i = 0, l = c.length || 0; i < l; i++) {
+            l && children.push(c[i]);
+          }
+          if (target === self.menu || target.parentNode === self.menu || target.parentNode.parentNode === self.menu) {
+            self.toggle(e);
+          } else if (children && children.indexOf(target) > -1) {
+            return;
+          } else {
+            self.close();
+          }
+        };
+        this.toggle = function (e) {
+          if (/\bopen/.test(this.menu.parentNode.className)) {
+            this.close();
+            document.removeEventListener('keydown', this.key, false);
+          } else {
+            this.menu.parentNode.className += ' open';
+            this.menu.setAttribute('aria-expanded', true);
+            document.addEventListener('keydown', this.key, false);
+          }
+        };
+        this.key = function (e) {
+          if (e.which == 27) {
+            self.close();
+          }
+        };
+        this.close = function () {
+          self.menu.parentNode.className = self.menu.parentNode.className.replace(/\bopen/, '');
+          self.menu.setAttribute('aria-expanded', false);
+        };
+        this.menu.setAttribute('tabindex', '0'); // Fix onblur on Chrome | Safari
+        document.addEventListener('click', this.handle, false);
+      };
+
+      (function () {
+        // DROPDOWN DATA API
+        // =================
+        var Dropdowns = document.querySelectorAll('[data-toggle=dropdown]'),
+            i = 0,
+            ddl = Dropdowns.length;
+        for (i; i < ddl; i++) {
+          new Dropdown(Dropdowns[i]);
+        }
+      })();
+      // Native Javascript for Bootstrap 3 | Modal
+      // by dnp_theme
+
+      //MODAL DEFINITION
+      // ===============
+      var Modal = function Modal(element, options) {
+        // element is the is the modal
+        options = options || {};
+        this.modal = (typeof element === 'undefined' ? 'undefined' : _typeof(element)) === 'object' ? element : document.querySelector(element);
+        this.options = {};
+        this.options.backdrop = options.backdrop === 'false' ? false : true;
+        this.options.keyboard = options.keyboard === 'false' ? false : true;
+        this.options.content = options.content;
+        this.duration = options.duration || 300; // the default modal fade duration option
+        this.options.duration = isIE && isIE < 10 ? 0 : this.duration;
+        this.scrollbarWidth = 0;
+        this.dialog = this.modal.querySelector('.modal-dialog');
+        this.timer = 0;
+
+        var self = this,
+            getWindowWidth = function getWindowWidth() {
+          var htmlRect = document.documentElement.getBoundingClientRect(),
+              fullWindowWidth = window.innerWidth || htmlRect.right - Math.abs(htmlRect.left);
+          return fullWindowWidth;
+        },
+            setScrollbar = function setScrollbar() {
+          var bodyStyle = window.getComputedStyle(document.body),
+              bodyPad = parseInt(bodyStyle.paddingRight, 10);
+          if (self.bodyIsOverflowing) {
+            document.body.style.paddingRight = bodyPad + self.scrollbarWidth + 'px';
+          }
+        },
+            resetScrollbar = function resetScrollbar() {
+          document.body.style.paddingRight = '';
+        },
+            measureScrollbar = function measureScrollbar() {
+          // thx walsh
+          var scrollDiv = document.createElement('div');
+          scrollDiv.className = 'modal-scrollbar-measure';
+          document.body.appendChild(scrollDiv);
+          var scrollbarWidth = scrollDiv.offsetWidth - scrollDiv.clientWidth;
+          document.body.removeChild(scrollDiv);
+          return scrollbarWidth;
+        },
+            checkScrollbar = function checkScrollbar() {
+          self.bodyIsOverflowing = document.body.clientWidth < getWindowWidth();
+          self.modalIsOverflowing = self.modal.scrollHeight > document.documentElement.clientHeight;
+          self.scrollbarWidth = measureScrollbar();
+        };
+
+        this.open = function () {
+          var currentOpen = document.querySelector('.modal.in');
+          if (currentOpen) {
+            clearTimeout(currentOpen.getAttribute('data-timer'));
+            removeClass(currentOpen, 'in');
+            setTimeout(function () {
+              currentOpen.setAttribute('aria-hidden', true);
+              currentOpen.style.display = '';
+            }, this.options.duration / 2);
+          }
+
+          if (this.options.backdrop) {
+            this.createOverlay();
+          } else {
+            this.overlay = null;
+          }
+
+          if (this.overlay) {
+            setTimeout(function () {
+              addClass(self.overlay, 'in');
+            }, 0);
+          }
+
+          clearTimeout(self.modal.getAttribute('data-timer'));
+          this.timer = setTimeout(function () {
+            self.modal.style.display = 'block';
+
+            checkScrollbar();
+            self.adjustDialog();
+            setScrollbar();
+
+            self.resize();
+            self.dismiss();
+            self.keydown();
+
+            addClass(document.body, 'modal-open');
+            addClass(self.modal, 'in');
+            self.modal.setAttribute('aria-hidden', false);
+          }, this.options.duration / 2);
+          this.modal.setAttribute('data-timer', this.timer);
+        };
+        this.close = function () {
+
+          if (this.overlay) {
+            removeClass(this.overlay, 'in');
+          }
+          removeClass(this.modal, 'in');
+          this.modal.setAttribute('aria-hidden', true);
+
+          clearTimeout(this.modal.getAttribute('data-timer'));
+          this.timer = setTimeout(function () {
+            removeClass(document.body, 'modal-open');
+            self.resize();
+            self.resetAdjustments();
+            resetScrollbar();
+
+            self.dismiss();
+            self.keydown();
+            self.modal.style.display = '';
+          }, this.options.duration / 2);
+          this.modal.setAttribute('data-timer', this.timer);
+
+          setTimeout(function () {
+            if (!document.querySelector('.modal.in')) {
+              self.removeOverlay();
+            }
+          }, this.options.duration);
+        };
+        this.content = function (content) {
+          return this.modal.querySelector('.modal-content').innerHTML = content;
+        };
+        this.createOverlay = function () {
+          var backdrop = document.createElement('div'),
+              overlay = document.querySelector('.modal-backdrop');
+          backdrop.setAttribute('class', 'modal-backdrop fade');
+
+          if (overlay) {
+            this.overlay = overlay;
+          } else {
+            this.overlay = backdrop;
+            document.body.appendChild(backdrop);
+          }
+        };
+        this.removeOverlay = function () {
+          var overlay = document.querySelector('.modal-backdrop');
+          if (overlay !== null && overlay !== undefined) {
+            document.body.removeChild(overlay);
+          }
+        };
+        this.keydown = function () {
+          function keyHandler(e) {
+            if (self.options.keyboard && e.which == 27) {
+              self.close();
+            }
+          }
+          if (!/\bin/.test(this.modal.className)) {
+            document.addEventListener('keydown', keyHandler, false);
+          } else {
+            document.removeEventListener('keydown', keyHandler, false);
+          }
+        };
+        this.trigger = function () {
+          var triggers = document.querySelectorAll('[data-toggle="modal"]'),
+              tgl = triggers.length,
+              i = 0;
+          for (i; i < tgl; i++) {
+            triggers[i].addEventListener('click', function (e) {
+              e.preventDefault();
+              var b = this,
+                  // var b = e.target,
+              s = b.getAttribute('data-target') && b.getAttribute('data-target').replace('#', '') || b.getAttribute('href') && b.getAttribute('href').replace('#', '');
+              if (document.getElementById(s) === self.modal) {
+                self.open();
+              }
+            });
+          }
+        };
+        this._resize = function () {
+          var overlay = this.overlay || document.querySelector('.modal-backdrop'),
+              dim = { w: document.documentElement.clientWidth + 'px', h: document.documentElement.clientHeight + 'px' };
+          if (overlay !== null && /\bin/.test(overlay.className)) {
+            overlay.style.height = dim.h;overlay.style.width = dim.w;
+          }
+        };
+        this.oneResize = function () {
+          function oneResize() {
+            self._resize();
+            self.handleUpdate();
+            window.removeEventListener('resize', oneResize, false);
+          }
+          window.addEventListener('resize', oneResize, false);
+        };
+        this.resize = function () {
+          function resizeHandler() {
+            self._resize();
+            self.handleUpdate();
+          }
+
+          if (!/\bin/.test(this.modal.className)) {
+            window.addEventListener('resize', this.oneResize, false);
+          } else {
+            window.removeEventListener('resize', this.oneResize, false);
+          }
+        };
+        this.dismiss = function () {
+          function dismissHandler(e) {
+            if (e.target.parentNode.getAttribute('data-dismiss') === 'modal' || e.target.getAttribute('data-dismiss') === 'modal' || e.target === self.modal) {
+              // if ( this.parentNode.getAttribute('data-dismiss') === 'modal' || this.getAttribute('data-dismiss') === 'modal' || this === self.modal ) {
+              e.preventDefault();self.close();
+            }
+          }
+          if (!/\bin/.test(this.modal.className)) {
+            this.modal.addEventListener('click', dismissHandler, false);
+          } else {
+            this.modal.removeEventListener('click', dismissHandler, false);
+          }
+        };
+        // these following methods are used to handle overflowing modals
+        this.handleUpdate = function () {
+          this.adjustDialog();
+        };
+        this.adjustDialog = function () {
+          this.modal.style.paddingLeft = !this.bodyIsOverflowing && this.modalIsOverflowing ? this.scrollbarWidth + 'px' : '';
+          this.modal.style.paddingRight = this.bodyIsOverflowing && !this.modalIsOverflowing ? this.scrollbarWidth + 'px' : '';
+        };
+        this.resetAdjustments = function () {
+          this.modal.style.paddingLeft = '';
+          this.modal.style.paddingRight = '';
+        };
+        //init
+        this.trigger();
+        if (this.options.content && this.options.content !== undefined) {
+          this.content(this.options.content);
+        }
+      };
+
+      (function () {
+        // DATA API
+        var Modals = document.querySelectorAll('.modal'),
+            mdl = Modals.length,
+            i = 0;
+        for (i; i < mdl; i++) {
+          var modal = Modals[i],
+              options = {};
+          options.keyboard = modal.getAttribute('data-keyboard');
+          options.backdrop = modal.getAttribute('data-backdrop');
+          options.duration = modal.getAttribute('data-duration');
+          new Modal(modal, options);
+        }
+      })();
+      // Native Javascript for Bootstrap 3 | Popover
+      // by dnp_theme
+
+      // POPOVER DEFINITION
+      // ===================
+      var Popover = function Popover(element, options) {
+        options = options || {};
+        this.link = (typeof element === 'undefined' ? 'undefined' : _typeof(element)) === 'object' ? element : document.querySelector(element);
+        this.title = this.link.getAttribute('data-title') || null;
+        this.content = this.link.getAttribute('data-content') || null;
+        this.popover = null;
+        this.options = {};
+        this.options.template = options.template ? options.template : null;
+        this.options.trigger = options.trigger ? options.trigger : 'hover';
+        this.options.animation = options.animation && options.animation !== 'true' ? options.animation : 'true';
+        this.options.placement = options.placement ? options.placement : 'top';
+        this.options.delay = parseInt(options.delay) || 100;
+        this.options.dismiss = options.dismiss && options.dismiss === 'true' ? true : false;
+        this.duration = 150;
+        this.options.duration = isIE && isIE < 10 ? 0 : options.duration || this.duration;
+        this.options.container = document.body;
+        if (!this.content && !this.options.template) return;
+        this.timer = 0; // the link own event timer
+
+        console.log('this from Popover', this);
+
+        var self = this,
+            events = 'onmouseleave' in this.link ? ['mouseenter', 'mouseleave'] : ['mouseover', 'mouseout'];
+
+        this.toggle = function (e) {
+          if (self.popover === null) {
+            self.open();
+          } else {
+            self.close();
+          }
+        };
+        this.open = function (e) {
+          clearTimeout(self.link.getAttribute('data-timer'));
+          self.timer = setTimeout(function () {
+            if (self.popover === null) {
+              self.createPopover();
+              self.stylePopover();
+              self.updatePopover();
+            }
+          }, self.options.duration);
+          self.link.setAttribute('data-timer', self.timer);
+        };
+        this.dismiss = function (e) {
+          if (self.popover && e.target === self.popover.querySelector('.close')) {
+            self.close();
+          }
+        };
+        this.close = function (e) {
+          clearTimeout(self.link.getAttribute('data-timer'));
+          self.timer = setTimeout(function () {
+            if (self.popover && self.popover !== null && /\bin/.test(self.popover.className)) {
+              self.popover.className = self.popover.className.replace(' in', '');
+              setTimeout(function () {
+                self.removePopover(); // for performance/testing reasons we can keep the popovers if we want
+              }, self.options.duration);
+            }
+          }, self.options.delay + self.options.duration);
+          self.link.setAttribute('data-timer', self.timer);
+        };
+        //remove the popover
+        this.removePopover = function () {
+          this.popover && this.options.container.removeChild(this.popover);
+          this.popover = null;
+          this.timer = null;
+        };
+        this.createPopover = function () {
+          this.popover = document.createElement('div');
+
+          if (this.content !== null && this.options.template === null) {
+            //create the popover from data attributes
+
+            this.popover.setAttribute('role', 'tooltip');
+
+            var popoverArrow = document.createElement('div');
+            popoverArrow.setAttribute('class', 'arrow');
+
+            if (this.title !== null) {
+              var popoverTitle = document.createElement('h3');
+              popoverTitle.setAttribute('class', 'popover-title');
+
+              if (this.options.dismiss) {
+                popoverTitle.innerHTML = this.title + '<button type="button" class="close">×</button>';
+              } else {
+                popoverTitle.innerHTML = this.title;
+              }
+              this.popover.appendChild(popoverTitle);
+            }
+
+            var popoverContent = document.createElement('div');
+            popoverContent.setAttribute('class', 'popover-content');
+
+            this.popover.appendChild(popoverArrow);
+            this.popover.appendChild(popoverContent);
+
+            //set popover content
+            if (this.options.dismiss && this.title === null) {
+              popoverContent.innerHTML = this.content + '<button type="button" class="close">×</button>';
+            } else {
+              popoverContent.innerHTML = this.content;
+            }
+          } else {
+            // or create the popover from template
+            var template = document.createElement('div');
+            template.innerHTML = this.options.template;
+            this.popover.innerHTML = template.firstChild.innerHTML;
+          }
+
+          //append to the container
+          this.options.container.appendChild(this.popover);
+          this.popover.style.display = 'block';
+        };
+        this.stylePopover = function (pos) {
+          var rect = this.link.getBoundingClientRect(),
+              placement = pos || this.options.placement,
+              animation = this.options.animation === 'true' ? 'fade' : '';
+
+          this.popover.setAttribute('class', 'popover ' + placement + ' ' + animation);
+
+          var ld = { w: rect.right - rect.left, h: rect.bottom - rect.top },
+              //link real dimensions
+          pd = { w: this.popover.offsetWidth, h: this.popover.offsetHeight },
+              //popover real dimensions
+          sYo = this.getScroll().y,
+              sXo = this.getScroll().x; //window vertical and horizontal scroll
+
+          //apply styling
+          if (/top/.test(placement)) {
+            //TOP
+            this.popover.style.top = rect.top + sYo - pd.h + 'px';
+            this.popover.style.left = rect.left + sXo - pd.w / 2 + ld.w / 2 + 'px';
+          } else if (/bottom/.test(placement)) {
+            //BOTTOM
+            this.popover.style.top = rect.top + sYo + ld.h + 'px';
+            this.popover.style.left = rect.left + sXo - pd.w / 2 + ld.w / 2 + 'px';
+          } else if (/left/.test(placement)) {
+            //LEFT
+            this.popover.style.top = rect.top + sYo - pd.h / 2 + ld.h / 2 + 'px';
+            this.popover.style.left = rect.left + sXo - pd.w + 'px';
+          } else if (/right/.test(placement)) {
+            //RIGHT
+            this.popover.style.top = rect.top + sYo - pd.h / 2 + ld.h / 2 + 'px';
+            this.popover.style.left = rect.left + sXo + ld.w + 'px';
+          }
+        };
+        this.updatePopover = function () {
+          var placement = null;
+          if (!isElementInViewport(this.popover)) {
+            placement = this.updatePlacement();
+          } else {
+            placement = this.options.placement;
+          }
+
+          this.stylePopover(placement);
+          this.popover.className += ' in';
+        };
+        this.updatePlacement = function () {
+          var pos = this.options.placement;
+          if (/top/.test(pos)) {
+            //TOP
+            return 'bottom';
+          } else if (/bottom/.test(pos)) {
+            //BOTTOM
+            return 'top';
+          } else if (/left/.test(pos)) {
+            //LEFT
+            return 'right';
+          } else if (/right/.test(pos)) {
+            //RIGHT
+            return 'left';
+          }
+        };
+        this.getScroll = function () {
+          return {
+            y: window.pageYOffset || document.documentElement.scrollTop,
+            x: window.pageXOffset || document.documentElement.scrollLeft
+          };
+        };
+        // init
+        if (this.options.trigger === 'hover') {
+          this.link.addEventListener(events[0], this.open, false);
+          if (!this.options.dismiss) {
+            this.link.addEventListener(events[1], this.close, false);
+          }
+        } else if (this.options.trigger === 'click') {
+          this.link.addEventListener('click', this.toggle, false);
+          if (!this.options.dismiss) {
+            this.link.addEventListener('blur', this.close, false);
+          }
+        } else if (this.options.trigger === 'focus') {
+          this.link.addEventListener('focus', this.toggle, false);
+          if (!this.options.dismiss) {
+            this.link.addEventListener('blur', this.close, false);
+          }
+        }
+
+        if (this.options.dismiss) {
+          document.addEventListener('click', this.dismiss, false);
+        }
+
+        if (!(isIE && isIE < 9)) {
+          // dismiss on window resize
+          window.addEventListener('resize', this.close, false);
+        }
+      };
+
+      (function () {
+        // POPOVER DATA API
+        // =================
+        var Popovers = document.querySelectorAll('[data-toggle=popover]'),
+            i = 0,
+            ppl = Popovers.length;
+        for (i; i < ppl; i++) {
+          var item = Popovers[i],
+              options = {};
+          options.trigger = item.getAttribute('data-trigger'); // click / hover / focus
+          options.animation = item.getAttribute('data-animation'); // true / false
+          options.duration = item.getAttribute('data-duration');
+          options.placement = item.getAttribute('data-placement');
+          options.dismiss = item.getAttribute('data-dismiss');
+          options.delay = item.getAttribute('data-delay');
+          new Popover(item, options);
+        }
+      })();
+      // Native Javascript for Bootstrap 3 | ScrollSpy
+      // by dnp_theme
+
+      //SCROLLSPY DEFINITION
+      var ScrollSpy = function ScrollSpy(element, item, options) {
+        options = options || {};
+
+        //this is the container element we spy it's elements on
+        this.element = (typeof element === 'undefined' ? 'undefined' : _typeof(element)) === 'object' ? element : document.querySelector(element);
+
+        this.options = {};
+        // this is the UL menu component our scrollSpy object will target, configure and required by the container element
+        this.options.target = options.target ? _typeof(options.target) === 'object' ? options.target : document.querySelector(options.target) : null;
+
+        //we need to determine the index of each menu item
+        this.items = this.options.target && this.options.target.getElementsByTagName('A');
+
+        this.item = item;
+        // the parent LI element
+        this.parent = this.item.parentNode;
+
+        // the upper level LI ^ UL ^ LI, this is required for dropdown menus
+        this.parentParent = this.parent.parentNode.parentNode;
+
+        this.tg = this.item.href && document.getElementById(this.item.getAttribute('href').replace('#', ''));
+        this.active = false;
+        this.topEdge = 0;
+        this.bottomEdge = 0;
+        var self = this;
+
+        //determine which is the real scrollTarget
+        if (this.element.offsetHeight < this.element.scrollHeight) {
+          // or this.scrollHeight()
+          this.scrollTarget = this.element;
+        } else {
+          this.scrollTarget = window;
+        }
+
+        if (!this.options.target) {
+          return;
+        }
+
+        this.topLimit = function () {
+          // the target offset
+          if (this.scrollTarget === window) {
+            return this.tg.getBoundingClientRect().top + this.scrollOffset() - 5;
+          } else {
+            return this.tg.offsetTop;
+          }
+        };
+        this.bottomLimit = function () {
+          return this.topLimit() + this.tg.clientHeight;
+        };
+        this.checkEdges = function () {
+          this.topEdge = this.topLimit();
+          this.bottomEdge = this.bottomLimit();
+        };
+        this.scrollOffset = function () {
+          if (this.scrollTarget === window) {
+            return window.pageYOffset || document.documentElement.scrollTop;
+          } else {
+            return this.element.scrollTop;
+          }
+        };
+        this.activate = function () {
+          if (this.parent && this.parent.tagName === 'LI' && !/\bactive/.test(this.parent.className)) {
+            addClass(this.parent, 'active');
+            if (this.parentParent && this.parentParent.tagName === 'LI' // activate the dropdown as well
+            && /\bdropdown/.test(this.parentParent.className) && !/\bactive/.test(this.parentParent.className)) {
+              addClass(this.parentParent, 'active');
+            }
+            this.active = true;
+          }
+        };
+        this.deactivate = function () {
+          if (this.parent && this.parent.tagName === 'LI' && /\bactive/.test(this.parent.className)) {
+            removeClass(this.parent, 'active');
+            if (this.parentParent && this.parentParent.tagName === 'LI' // deactivate the dropdown as well
+            && /\bdropdown/.test(this.parentParent.className) && /\bactive/.test(this.parentParent.className)) {
+              removeClass(this.parentParent, 'active');
+            }
+            this.active = false;
+          }
+        };
+        this.toggle = function () {
+          if (this.active === false && this.bottomEdge > this.scrollOffset() && this.scrollOffset() >= this.topEdge) {
+            //regular use, scroll just entered the element's topLimit or bottomLimit
+            this.activate();
+          } else if (this.active === true && this.bottomEdge <= this.scrollOffset() && this.scrollOffset() < this.topEdge) {
+            this.deactivate();
+          }
+        };
+        this.refresh = function () {
+          // check edges again
+          this.deactivate();
+          this.checkEdges();
+
+          this.toggle(); // If any case update values again
+        };
+        this.scrollEvent = function () {
+          function onSpyScroll() {
+            self.refresh();
+          }
+          this.scrollTarget.addEventListener('scroll', onSpyScroll, false);
+        };
+        this.resizeEvent = function () {
+          function onSpyResize() {
+            self.refresh();
+          }
+          window.addEventListener('resize', onSpyResize, false);
+        };
+        this.scrollHeight = function () {
+          if (this.scrollTarget === window) {
+            return Math.max(document.body.scrollHeight, document.body.offsetHeight, document.documentElement.clientHeight, document.documentElement.scrollHeight, document.documentElement.offsetHeight);
+          } else {
+            return this.element.scrollHeight;
+          }
+        };
+
+        // init
+        if (this.item.getAttribute('href') && this.item.getAttribute('href').indexOf('#') > -1) {
+          //actions
+          this.checkEdges();
+          this.refresh();
+          this.scrollEvent();
+          if (!(isIE && isIE < 9)) {
+            this.resizeEvent();
+          }
+        }
+      };
+
+      (function () {
+        //SCROLLSPY DATA API
+        //=============
+        var scrollSpyes = document.querySelectorAll('[data-spy="scroll"]'),
+            i = 0,
+            ssl = scrollSpyes.length; // mostly is the document.body or a large container with many elements having id="not-null-id"
+        for (i; i < ssl; i++) {
+          var spy = scrollSpyes[i],
+              options = {};
+          options.target = spy.getAttribute('data-target') || null; // this must be a .nav component with id="not-null"
+          if (options.target !== null) {
+            var menu = options.target === 'object' ? options.target : document.querySelector(options.target),
+                items = menu.querySelectorAll('a'),
+                j = 0,
+                il = items.length;
+            for (j; j < il; j++) {
+              var item = items[j];
+              if (item.href && item.getAttribute('href') !== '#') new ScrollSpy(spy, item, options);
+            }
+          }
+        }
+      })();
+      // Native Javascript for Bootstrap 3 | Tab
+      // by dnp_theme
+
+      // TAB DEFINITION
+      // ===================
+      var Tab = function Tab(element, options) {
+        options = options || {};
+        this.tab = (typeof element === 'undefined' ? 'undefined' : _typeof(element)) === 'object' ? element : document.querySelector(element);
+        this.tabs = this.tab.parentNode.parentNode;
+        this.dropdown = this.tabs.querySelector('.dropdown');
+        if (/\bdropdown-menu/.test(this.tabs.className)) {
+          this.dropdown = this.tabs.parentNode;
+          this.tabs = this.tabs.parentNode.parentNode;
+        }
+        this.options = options;
+
+        // default tab transition duration
+        this.duration = 150;
+        this.options.duration = isIE && isIE < 10 ? 0 : options.duration || this.duration;
+
+        var self = this;
+
+        this.handle = function (e) {
+          e = e || window.e;e.preventDefault();
+          var next = e.target; //the tab we clicked is now the next tab
+          var nextContent = document.getElementById(next.getAttribute('href').replace('#', '')); //this is the actual object, the next tab content to activate
+
+          // get current active tab and content
+          var activeTab = self.getActiveTab();
+          var activeContent = self.getActiveContent();
+
+          if (!/\bactive/.test(next.parentNode.className)) {
+            // toggle "active" class name
+            removeClass(activeTab, 'active');
+            addClass(next.parentNode, 'active');
+
+            // handle dropdown menu "active" class name
+            if (self.dropdown) {
+              if (!/\bdropdown-menu/.test(self.tab.parentNode.parentNode.className)) {
+                if (/\bactive/.test(self.dropdown.className)) removeClass(self.dropdown, 'active');
+              } else {
+                if (!/\bactive/.test(self.dropdown.className)) addClass(self.dropdown, 'active');
+              }
+            }
+
+            //1. hide current active content first
+            removeClass(activeContent, 'in');
+
+            setTimeout(function () {
+              //2. toggle current active content from view
+              removeClass(activeContent, 'active');
+              addClass(nextContent, 'active');
+            }, self.options.duration);
+            setTimeout(function () {
+              //3. show next active content
+              addClass(nextContent, 'in');
+            }, self.options.duration * 2);
+          }
+        };
+        this.getActiveTab = function () {
+          var activeTabs = this.tabs.querySelectorAll('.active');
+          if (activeTabs.length === 1 && !/\bdropdown/.test(activeTabs[0].className)) {
+            return activeTabs[0];
+          } else if (activeTabs.length > 1) {
+            return activeTabs[activeTabs.length - 1];
+          }
+        };
+        this.getActiveContent = function () {
+          var a = this.getActiveTab().getElementsByTagName('A')[0].getAttribute('href').replace('#', '');
+          return a && document.getElementById(a);
+        };
+
+        // init
+        this.tab.addEventListener('click', this.handle, false);
+      };
+
+      (function () {
+        // TAB DATA API
+        // =================
+        var Tabs = document.querySelectorAll("[data-toggle='tab'], [data-toggle='pill']"),
+            tbl = Tabs.length,
+            i = 0;
+        for (i; i < tbl; i++) {
+          var tab = Tabs[i],
+              options = {};
+          options.duration = tab.getAttribute('data-duration') && tab.getAttribute('data-duration') || false;
+          new Tab(tab, options);
+        }
+      })();
+      // Native Javascript for Bootstrap 3 | Tooltip
+      // by dnp_theme
+
+      // TOOLTIP DEFINITION
+      // ===================
+      var Tooltip = function Tooltip(element, options) {
+        options = options || {};
+
+        this.link = (typeof element === 'undefined' ? 'undefined' : _typeof(element)) === 'object' ? element : document.querySelector(element);
+        this.title = this.link.getAttribute('title') || this.link.getAttribute('data-original-title');
+        this.tooltip = null;
+        this.options = {};
+        this.options.animation = options.animation && options.animation !== 'fade' ? options.animation : 'fade';
+        this.options.placement = options.placement ? options.placement : 'top';
+        this.options.delay = parseInt(options.delay) || 100;
+        this.duration = 150;
+        this.options.duration = isIE && isIE < 10 ? 0 : options.duration || this.duration;
+        this.options.container = options.container || document.body;
+        if (!this.title) return;
+        this.timer = 0; // the link own event timer
+
+        var self = this,
+            events = 'onmouseleave' in this.link ? ['mouseenter', 'mouseleave'] : ['mouseover', 'mouseout'];
+
+        this.open = function (e) {
+          clearTimeout(self.link.getAttribute('data-timer'));
+          self.timer = setTimeout(function () {
+            if (self.tooltip === null) {
+              self.createToolTip();
+              self.styleTooltip();
+              self.updateTooltip();
+            }
+          }, self.options.duration);
+          self.link.setAttribute('data-timer', self.timer);
+        };
+        this.close = function (e) {
+          clearTimeout(self.link.getAttribute('data-timer'));
+          self.timer = setTimeout(function () {
+            if (self.tooltip && self.tooltip !== null) {
+              self.tooltip.className = self.tooltip.className.replace(' in', '');
+              setTimeout(function () {
+                self.removeToolTip(); // for performance/testing reasons we can keep the tooltips if we want
+              }, self.options.duration);
+            }
+          }, self.options.delay + self.options.duration);
+          self.link.setAttribute('data-timer', self.timer);
+        };
+        //remove the tooltip
+        this.removeToolTip = function () {
+          this.tooltip && this.options.container.removeChild(this.tooltip);
+          this.tooltip = null;
+        };
+        //create the tooltip structure
+        this.createToolTip = function () {
+          this.tooltip = document.createElement('div');
+          this.tooltip.setAttribute('role', 'tooltip');
+
+          var tooltipArrow = document.createElement('div');
+          tooltipArrow.setAttribute('class', 'tooltip-arrow');
+          var tooltipInner = document.createElement('div');
+          tooltipInner.setAttribute('class', 'tooltip-inner');
+
+          this.tooltip.appendChild(tooltipArrow);
+          this.tooltip.appendChild(tooltipInner);
+
+          //set tooltip content
+          tooltipInner.innerHTML = this.title;
+
+          //append to the container
+          this.options.container.appendChild(this.tooltip);
+        };
+        this.styleTooltip = function (pos) {
+          var rect = this.link.getBoundingClientRect(),
+              placement = pos || this.options.placement;
+
+          this.tooltip.setAttribute('class', 'tooltip ' + placement + ' ' + this.options.animation);
+
+          var ld = { w: rect.right - rect.left, h: rect.bottom - rect.top },
+              //link real dimensions
+          td = { w: this.tooltip.offsetWidth, h: this.tooltip.offsetHeight },
+              //tooltip real dimensions
+          sYo = this.getScroll().y,
+              sXo = this.getScroll().x; //window vertical and horizontal scroll
+
+          //apply styling
+          if (/top/.test(placement)) {
+            //TOP
+            this.tooltip.style.top = rect.top + sYo - td.h + 'px';
+            this.tooltip.style.left = rect.left + sXo - td.w / 2 + ld.w / 2 + 'px';
+          } else if (/bottom/.test(placement)) {
+            //BOTTOM
+            this.tooltip.style.top = rect.top + sYo + ld.h + 'px';
+            this.tooltip.style.left = rect.left + sXo - td.w / 2 + ld.w / 2 + 'px';
+          } else if (/left/.test(placement)) {
+            //LEFT
+            this.tooltip.style.top = rect.top + sYo - td.h / 2 + ld.h / 2 + 'px';
+            this.tooltip.style.left = rect.left + sXo - td.w + 'px';
+          } else if (/right/.test(placement)) {
+            //RIGHT
+            this.tooltip.style.top = rect.top + sYo - td.h / 2 + ld.h / 2 + 'px';
+            this.tooltip.style.left = rect.left + sXo + ld.w + 'px';
+          }
+        };
+        this.updateTooltip = function () {
+          var placement = null;
+          if (!isElementInViewport(this.tooltip)) {
+            placement = this.updatePlacement();
+          } else {
+            placement = this.options.placement;
+          }
+          this.styleTooltip(placement);
+          this.tooltip.className += ' in';
+        };
+        this.updatePlacement = function () {
+          var pos = this.options.placement;
+          if (/top/.test(pos)) {
+            //TOP
+            return 'bottom';
+          } else if (/bottom/.test(pos)) {
+            //BOTTOM
+            return 'top';
+          } else if (/left/.test(pos)) {
+            //LEFT
+            return 'right';
+          } else if (/right/.test(pos)) {
+            //RIGHT
+            return 'left';
+          }
+        };
+        this.getScroll = function () {
+          return {
+            y: window.pageYOffset || document.documentElement.scrollTop,
+            x: window.pageXOffset || document.documentElement.scrollLeft
+          };
+        };
+        // init
+        this.link.addEventListener(events[0], this.open, false);
+        this.link.addEventListener(events[1], this.close, false);
+        //remove title from link
+        this.link.setAttribute('data-original-title', this.title);
+        this.link.removeAttribute('title');
+      };
+
+      (function () {
+        // TOOLTIP DATA API
+        // =================
+        var Tooltips = document.querySelectorAll('[data-toggle=tooltip]'),
+            i = 0,
+            tpl = Tooltips.length;
+        for (i; i < tpl; i++) {
+          var item = Tooltips[i],
+              options = {};
+          options.animation = item.getAttribute('data-animation');
+          options.placement = item.getAttribute('data-placement');
+          options.duration = item.getAttribute('data-duration');
+          options.delay = item.getAttribute('data-delay');
+          new Tooltip(item, options);
+        }
+      })();
+
+      return {
+        Affix: Affix,
+        Alert: Alert,
+        Button: Button,
+        Carousel: Carousel,
+        Collapse: Collapse,
+        Dropdown: Dropdown,
+        Modal: Modal,
+        Popover: Popover,
+        ScrollSpy: ScrollSpy,
+        Tab: Tab,
+        Tooltip: Tooltip
+      };
+    });
+
+    // Show the tooltip on the hovered over circle
+    function showTooltip(d, i, options, popoverTooltip) {
+      var idVariable = options.idVariable;
+      var xVariable = options.xVariable;
+      var yVariable = options.yVariable;
+      var tip = options.tip;
+      var wrapper = options.wrapper;
+      var height = options.height;
+      var width = options.width;
+      var tooltipVariables = options.tooltipVariables;
+      // Save the circle element (so not the voronoi which is triggering the hover event)
+      // in a variable by using the unique class of the voronoi (idVariable)
+      var elementSelector = void 0;
+      if (typeof d.datum !== 'undefined' && typeof d.datum[idVariable] !== 'undefined') {
+        elementSelector = '.marks.id' + xVariable + yVariable + d.datum[idVariable];
+      } else {
+        elementSelector = '.marks.id' + xVariable + yVariable + d[idVariable];
       }
 
-      return tip;
-    };
+      var element = selectAll(elementSelector);
 
-    function tooltip(tooltipVariables) {
-      var tip = d3Tip().parent(document.getElementById('chart')).offset([0, 0]).direction('n').attr('class', 'd3-tip').html(function (d) {
+      var el = element._groups[0];
+
+      function generateHTML() {
         // console.log('d from tooltip html function', d);
         var allRows = '';
         tooltipVariables.forEach(function (e) {
@@ -17002,68 +18394,54 @@ var     y0$3;
           var currentRow = '<span style=\'font-size: 11px; display: block; text-align: center;\'>' + e.name + ' ' + currentValue + '</span>';
           allRows = allRows.concat(currentRow);
         });
-        return '<div style=\'background-color: white; padding: 5px; border-radius: 6px;\n        border-style: solid; border-color: #D1D1D1; border-width: 1px;\'>\n        ' + allRows + '\n        </div>';
+        var html = '<div class="popover" role="tooltip">\n          <div class="arrow"></div>\n          <div class="popover-content">' + allRows + '</div>\n        </div>';
+        console.log('html from template', html);
+        return html;
+      };
+
+      //Define and show the tooltip
+      popoverTooltip = new Popover(elementSelector, {
+        trigger: 'hover',
+        template: generateHTML()
       });
 
-      return tip;
-    }
+      console.log('popoverTooltip', popoverTooltip);
+      popoverTooltip.open();
 
-    // Show the tooltip on the hovered over circle
-    function showTooltip(d, i, options) {
-        var idVariable = options.idVariable;
-        var xVariable = options.xVariable;
-        var yVariable = options.yVariable;
-        var tip = options.tip;
-        var wrapper = options.wrapper;
-        var height = options.height;
-        var width = options.width;
-        // Save the circle element (so not the voronoi which is triggering the hover event)
-        // in a variable by using the unique class of the voronoi (idVariable)
-        var elementSelector = void 0;
-        if (typeof d.datum !== 'undefined' && typeof d.datum[idVariable] !== 'undefined') {
-            elementSelector = '.marks.id' + xVariable + yVariable + d.datum[idVariable];
-        } else {
-            elementSelector = '.marks.id' + xVariable + yVariable + d[idVariable];
-        }
+      // $(el).popover({
+      //   placement: 'auto top',
+      //   container: '#chart',
+      //   trigger: 'manual',
+      //   html : true,
+      //   content: 
+      // })
+      // $(el).popover('show');
 
-        var element = void 0;
-        if (typeof d.datum !== 'undefined' && typeof d.datum[idVariable] !== 'undefined') {
-            element = selectAll('.marks.id' + xVariable + yVariable + d.datum[idVariable]);
-        } else {
-            element = selectAll('.marks.id' + xVariable + yVariable + d[idVariable]);
-        }
-        var el = element._groups[0];
-        //Define and show the tooltip
-        tip.show(d, i);
+      //Make chosen circle more visible
+      element.style("opacity", 1);
 
-        //Make chosen circle more visible
-        element.style("opacity", 1);
+      //Place and show tooltip
+      var x = +element.attr("cx");
+      var y = +element.attr("cy");
+      var color = element.style("fill");
 
-        //Place and show tooltip
-        var x = +element.attr("cx");
-        var y = +element.attr("cy");
-        var color = element.style("fill");
+      //Append lines to bubbles that will be used to show the precise data points
 
-        var offsetX = x - width / 2;
-        var offsetY = y - 20;
-        // [top, left]
-        tip.offset([offsetY, offsetX]);
+      //vertical line
+      wrapper.append("line").attr("class", "guide").attr("x1", x).attr("x2", x).attr("y1", y).attr("y2", height + 20).style("stroke", color).style("opacity", 0).transition().duration(200).style("opacity", 0.5);
+      //Value on the axis
+      wrapper.append("text").attr("class", "guide").attr("x", x).attr("y", height + 38).style("fill", color).style("opacity", 0).style("text-anchor", "middle").text("$ " + format(".2s")(d[xVariable])).transition().duration(200).style("opacity", 0.5);
 
-        //Append lines to bubbles that will be used to show the precise data points
+      //horizontal line
+      wrapper.append("line").attr("class", "guide").attr("x1", x).attr("x2", -20).attr("y1", y).attr("y2", y).style("stroke", color).style("opacity", 0).transition().duration(200).style("opacity", 0.5);
+      //Value on the axis
+      wrapper.append("text").attr("class", "guide").attr("x", -25).attr("y", y).attr("dy", "0.35em").style("fill", color).style("opacity", 0).style("text-anchor", "end").text(format(".1f")(d[yVariable])).transition().duration(200).style("opacity", 0.5);
 
-        //vertical line
-        wrapper.append("line").attr("class", "guide").attr("x1", x).attr("x2", x).attr("y1", y).attr("y2", height + 20).style("stroke", color).style("opacity", 0).transition().duration(200).style("opacity", 0.5);
-        //Value on the axis
-        wrapper.append("text").attr("class", "guide").attr("x", x).attr("y", height + 38).style("fill", color).style("opacity", 0).style("text-anchor", "middle").text("$ " + format(".2s")(d[xVariable])).transition().duration(200).style("opacity", 0.5);
-
-        //horizontal line
-        wrapper.append("line").attr("class", "guide").attr("x1", x).attr("x2", -20).attr("y1", y).attr("y2", y).style("stroke", color).style("opacity", 0).transition().duration(200).style("opacity", 0.5);
-        //Value on the axis
-        wrapper.append("text").attr("class", "guide").attr("x", -25).attr("y", y).attr("dy", "0.35em").style("fill", color).style("opacity", 0).style("text-anchor", "end").text(format(".1f")(d[yVariable])).transition().duration(200).style("opacity", 0.5);
+      return popoverTooltip;
     } // function showTooltip
 
     //Hide the tooltip when the mouse moves away
-    function removeTooltip(d, i, options) {
+    function removeTooltip(d, i, options, popoverTooltip) {
       var idVariable = options.idVariable;
       var xVariable = options.xVariable;
       var yVariable = options.yVariable;
@@ -17091,7 +18469,13 @@ var     y0$3;
       element.style('fill-opacity', 0.3);
 
       //Hide tooltip
-      tip.hide(d, i);
+      if (typeof popoverTooltip !== 'undefined') {
+        popoverTooltip.close();
+      }
+
+      // $('.popover').each(function() {
+      //   $(this).remove();
+      // }); 
 
       //Fade out guide lines, then remove them
       selectAll(".guide").transition().duration(200).style("opacity", 0).remove();
@@ -17319,13 +18703,6 @@ var     y0$3;
       }
 
       //
-      // Tooltips
-      //
-
-      var tip = tooltip(tooltipVariables);
-      svg.call(tip);
-
-      //
       // Scatterplot Circles
       //
 
@@ -17403,7 +18780,7 @@ var     y0$3;
             return rScale(d[rVariable]);
           }
           return marksRadius;
-        }).transition().delay(marksDelay).duration(2000).style('fill-opacity', opacityCircles);
+        }).transition().delay(marksDelay).duration(2000).style('fill-opacity', opacityCircles).attr('data-content', 'some data content').attr('data-toggle', 'popover').attr('data-duration', 100);
         // .append('title')
         //   .text(d => `${d[idVariable]} ${d[xLabelDetail]}`);
 
@@ -17426,7 +18803,10 @@ var     y0$3;
 
         ////////////////////////////////////////////////////////////  
         ///// Capture mouse events and voronoi.find() the site /////
-        ////////////////////////////////////////////////////////////  
+        ////////////////////////////////////////////////////////////
+
+        // initialize variable for popover tooltip
+        var popoverTooltip = void 0;
 
         // Use the same variables of the data in the .x and .y as used in the cx and cy of the circle call
         svg._tooltipped = svg._voronoi = null;
@@ -17457,12 +18837,11 @@ var     y0$3;
                 idVariable: idVariable,
                 xVariable: xVariable,
                 yVariable: yVariable,
-                tip: tip,
                 wrapper: wrapper,
                 height: height,
                 width: width
               };
-              removeTooltip(svg._tooltipped.data, undefined, removeTooltipOptions);
+              removeTooltip(svg._tooltipped.data, undefined, removeTooltipOptions, popoverTooltip);
             }
 
             if (site) {
@@ -17470,12 +18849,13 @@ var     y0$3;
                 idVariable: idVariable,
                 xVariable: xVariable,
                 yVariable: yVariable,
-                tip: tip,
                 wrapper: wrapper,
                 height: height,
-                width: width
+                width: width,
+                tooltipVariables: tooltipVariables
               };
-              showTooltip(site.data, undefined, showTooltipOptions);
+              // return the updated popoverTooltip
+              popoverTooltip = showTooltip(site.data, undefined, showTooltipOptions, popoverTooltip);
             }
             svg._tooltipped = site;
           }
