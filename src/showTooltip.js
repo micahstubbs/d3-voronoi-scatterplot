@@ -3,6 +3,10 @@ import * as bsn from 'bootstrap.native';
 
 // Show the tooltip on the hovered over circle
 export function showTooltip(d, i, options, popoverTooltip) {
+  // test the bootstrap.native import
+  // console.log('bsn', bsn);
+  const Popover = bsn.__moduleExports.Popover;
+
   const idVariable = options.idVariable;
   const xVariable = options.xVariable;
   const yVariable = options.yVariable;

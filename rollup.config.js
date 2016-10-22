@@ -8,7 +8,8 @@ export default {
   format: 'umd',
   globals: {
     d3: 'd3',
-    lodash: '_'
+    lodash: '_',
+    'bootstrap.native': 'bsn' 
   },
   moduleName: 'd3VoronoiScatterplot',
   plugins: [
