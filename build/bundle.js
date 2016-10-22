@@ -18395,7 +18395,7 @@ var     y0$3;
           allRows = allRows.concat(currentRow);
         });
         var html = '<div class="popover" role="tooltip">\n          <div class="arrow"></div>\n          <div class="popover-content">' + allRows + '</div>\n        </div>';
-        console.log('html from template', html);
+        // console.log('html from template', html);
         return html;
       };
 
@@ -18406,7 +18406,7 @@ var     y0$3;
         template: generateHTML()
       });
 
-      console.log('popoverTooltip', popoverTooltip);
+      // console.log('popoverTooltip', popoverTooltip);
       popoverTooltip.open();
 
       //Make chosen circle more visible
