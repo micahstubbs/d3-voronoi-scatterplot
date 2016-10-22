@@ -25,6 +25,7 @@ export function drawVoronoiScatterplot(selector, inputData, options) {
   const cfg = {
     margin: { left: 120, top: 20, right: 80, bottom: 40 },
     width: 1000,
+    height: 250,
     animateFromXAxis: undefined,
     hideXLabel: undefined,
     yVariable: 'y',
@@ -96,7 +97,7 @@ export function drawVoronoiScatterplot(selector, inputData, options) {
   // Scatterplot
   const margin = cfg.margin;
   const chartWidth = document.getElementById('chart').offsetWidth;
-  const height = cfg.width * 0.25;
+  const height = cfg.height;
   // const maxDistanceFromPoint = 50;
 
   let width;

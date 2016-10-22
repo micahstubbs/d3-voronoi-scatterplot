@@ -5,7 +5,7 @@
   "main": "build/bundle.js",
   "scripts": {
     "prepublish": "rm -rf build && mkdir build && rollup -c --banner \"$(preamble)\" -- index.js",
-    "test": "rm -rf build && mkdir build && rollup -c --banner \"$(preamble)\" -- index.js && cp build/bundle.js ~/workspace/d3-voronoi-scatterplot-example-project/04/d3-voronoi-scatterplot.js && cp build/bundle.js ~/workspace/visualizations/residuals/vis/06/src/d3-voronoi-scatterplot.js && cp build/bundle.js ~/workspace/residuals-vis/src/d3-voronoi-scatterplot.js",
+    "test": "rm -rf build && mkdir build && rollup -c --banner \"$(preamble)\" -- index.js && cp build/bundle.js ~/workspace/d3-voronoi-scatterplot-example-project/04/d3-voronoi-scatterplot.js && cp build/bundle.js ~/workspace/visualizations/residuals/vis/06/src/d3-voronoi-scatterplot.js && cp build/bundle.js ~/workspace/residuals-vis/node_modules/d3-voronoi-scatterplot/build/bundle.js",
     "lint": "eslint index.js src --fix"
   },
   "repository": {
