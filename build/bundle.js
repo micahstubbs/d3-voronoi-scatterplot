@@ -16640,17 +16640,17 @@ var     y0$3;
       } else {
         // Browser globals (root is window)
         var bsn = factory();
-        window.Affix = bsn.Affix;
-        window.Alert = bsn.Alert;
-        window.Button = bsn.Button;
-        window.Carousel = bsn.Carousel;
-        window.Collapse = bsn.Collapse;
-        window.Dropdown = bsn.Dropdown;
-        window.Modal = bsn.Modal;
-        window.Popover = bsn.Popover;
-        window.ScrollSpy = bsn.ScrollSpy;
-        window.Tab = bsn.Tab;
-        window.Tooltip = bsn.Tooltip;
+        root.Affix = bsn.Affix;
+        root.Alert = bsn.Alert;
+        root.Button = bsn.Button;
+        root.Carousel = bsn.Carousel;
+        root.Collapse = bsn.Collapse;
+        root.Dropdown = bsn.Dropdown;
+        root.Modal = bsn.Modal;
+        root.Popover = bsn.Popover;
+        root.ScrollSpy = bsn.ScrollSpy;
+        root.Tab = bsn.Tab;
+        root.Tooltip = bsn.Tooltip;
       }
     })(undefined, function () {
       // Native Javascript for Bootstrap 3 | Internal Utility Functions
@@ -17717,8 +17717,6 @@ var     y0$3;
         this.options.container = document.body;
         if (!this.content && !this.options.template) return;
         this.timer = 0; // the link own event timer
-
-        console.log('this from Popover', this);
 
         var self = this,
             events = 'onmouseleave' in this.link ? ['mouseenter', 'mouseleave'] : ['mouseover', 'mouseout'];
