@@ -18417,6 +18417,7 @@ var     y0$3;
       // })
       // $(el).popover('show');
 
+
       //Make chosen circle more visible
       element.style("opacity", 1);
 

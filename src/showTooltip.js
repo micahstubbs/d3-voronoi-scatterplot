@@ -85,6 +85,7 @@ export function showTooltip(d, i, options, popoverTooltip) {
   // })
   // $(el).popover('show');
 
+
   //Make chosen circle more visible
   element.style("opacity", 1);
 

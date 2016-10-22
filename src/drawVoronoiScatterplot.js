@@ -1,5 +1,4 @@
-import { tooltip } from './tooltip'; 
-import { drawVoronoiOverlay } from './drawVoronoiOverlay';
+ import { drawVoronoiOverlay } from './drawVoronoiOverlay';
 import { showTooltip } from './showTooltip';
 import { removeTooltip } from './removeTooltip';
 import * as d3 from 'd3';
