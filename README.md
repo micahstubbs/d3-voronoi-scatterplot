@@ -19,4 +19,4 @@ currently styles are not included, so please include this the tag for this boots
 
 `<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">`
 
-![screenshot](http://i.imgur.com/JeEf4hy.png)
+![screenshot](http://i.imgur.com/7iugvrl.png)
