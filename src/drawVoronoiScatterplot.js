@@ -29,6 +29,8 @@ export function drawVoronoiScatterplot(selector, inputData, options) {
     hideXLabel: undefined,
     yVariable: 'y',
     yExponent: 0.5,
+    xDroplineTextFormat: ".0f",
+    yDroplineTextFormat: ".0f",
     idVariable: undefined,
     voronoiStroke: 'none',
     maxDistanceFromPoint: 50,
@@ -70,6 +72,8 @@ export function drawVoronoiScatterplot(selector, inputData, options) {
   const voronoiStroke = cfg.voronoiStroke;
   const yScaleType = cfg.yScaleType;
   const yScaleExponent = cfg.yScaleExponent;
+  const xDroplineTextFormat = cfg.xDroplineTextFormat;
+  const yDroplineTextFormat = cfg.yDroplineTextFormat;
   const maxDistanceFromPoint = cfg.maxDistanceFromPoint;
 
   // labels
@@ -435,7 +439,9 @@ export function drawVoronoiScatterplot(selector, inputData, options) {
             wrapper,
             height,
             width,
-            tooltipVariables
+            tooltipVariables,
+            xDroplineTextFormat,
+            yDroplineTextFormat
           };
           // return the updated popoverTooltip
           popoverTooltip = showTooltip(site.data, undefined, showTooltipOptions, popoverTooltip);

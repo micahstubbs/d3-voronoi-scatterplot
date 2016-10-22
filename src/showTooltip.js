@@ -11,6 +11,8 @@ export function showTooltip(d, i, options, popoverTooltip) {
   const height = options.height;
   const width = options.width;
   const tooltipVariables = options.tooltipVariables;
+  const xDroplineTextFormat = options.xDroplineTextFormat;
+  const yDroplineTextFormat = options.yDroplineTextFormat;
   // Save the circle element (so not the voronoi which is triggering the hover event)
   // in a variable by using the unique class of the voronoi (idVariable)
   let elementSelector;
@@ -94,9 +96,11 @@ export function showTooltip(d, i, options, popoverTooltip) {
   const y = +element.attr("cy");
   const color = element.style("fill");
 
+  //
   //Append lines to bubbles that will be used to show the precise data points
+  //
   
-  //vertical line
+  //vertical line to x-axis
   wrapper
       .append("line")
       .attr("class", "guide")
@@ -117,11 +121,11 @@ export function showTooltip(d, i, options, popoverTooltip) {
       .style("fill", color)
       .style("opacity",  0)
       .style("text-anchor", "middle")
-      .text( "$ " + d3.format(".2s")(d[xVariable]) )
+      .text( d3.format(xDroplineTextFormat)(d[xVariable]) )
       .transition().duration(200)
       .style("opacity", 0.5);
 
-  //horizontal line
+  //horizontal line to y-axis
   wrapper
       .append("line")
       .attr("class", "guide")
@@ -143,7 +147,7 @@ export function showTooltip(d, i, options, popoverTooltip) {
       .style("fill", color)
       .style("opacity",  0)
       .style("text-anchor", "end")
-      .text( d3.format(".1f")(d[yVariable]) )
+      .text( d3.format(yDroplineTextFormat)(d[yVariable]) )
       .transition().duration(200)
       .style("opacity", 0.5);
 

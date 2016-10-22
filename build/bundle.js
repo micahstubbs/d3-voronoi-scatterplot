@@ -18349,6 +18349,8 @@ var     y0$3;
       var height = options.height;
       var width = options.width;
       var tooltipVariables = options.tooltipVariables;
+      var xDroplineTextFormat = options.xDroplineTextFormat;
+      var yDroplineTextFormat = options.yDroplineTextFormat;
       // Save the circle element (so not the voronoi which is triggering the hover event)
       // in a variable by using the unique class of the voronoi (idVariable)
       var elementSelector = void 0;
@@ -18426,17 +18428,19 @@ var     y0$3;
       var y = +element.attr("cy");
       var color = element.style("fill");
 
+      //
       //Append lines to bubbles that will be used to show the precise data points
+      //
 
-      //vertical line
+      //vertical line to x-axis
       wrapper.append("line").attr("class", "guide").attr("x1", x).attr("x2", x).attr("y1", y).attr("y2", height + 20).style("stroke", color).style("opacity", 0).transition().duration(200).style("opacity", 0.5);
       //Value on the axis
-      wrapper.append("text").attr("class", "guide").attr("x", x).attr("y", height + 38).style("fill", color).style("opacity", 0).style("text-anchor", "middle").text("$ " + format(".2s")(d[xVariable])).transition().duration(200).style("opacity", 0.5);
+      wrapper.append("text").attr("class", "guide").attr("x", x).attr("y", height + 38).style("fill", color).style("opacity", 0).style("text-anchor", "middle").text(format(xDroplineTextFormat)(d[xVariable])).transition().duration(200).style("opacity", 0.5);
 
-      //horizontal line
+      //horizontal line to y-axis
       wrapper.append("line").attr("class", "guide").attr("x1", x).attr("x2", -20).attr("y1", y).attr("y2", y).style("stroke", color).style("opacity", 0).transition().duration(200).style("opacity", 0.5);
       //Value on the axis
-      wrapper.append("text").attr("class", "guide").attr("x", -25).attr("y", y).attr("dy", "0.35em").style("fill", color).style("opacity", 0).style("text-anchor", "end").text(format(".1f")(d[yVariable])).transition().duration(200).style("opacity", 0.5);
+      wrapper.append("text").attr("class", "guide").attr("x", -25).attr("y", y).attr("dy", "0.35em").style("fill", color).style("opacity", 0).style("text-anchor", "end").text(format(yDroplineTextFormat)(d[yVariable])).transition().duration(200).style("opacity", 0.5);
 
       return popoverTooltip;
     } // function showTooltip
@@ -18507,6 +18511,8 @@ var     y0$3;
         hideXLabel: undefined,
         yVariable: 'y',
         yExponent: 0.5,
+        xDroplineTextFormat: ".0f",
+        yDroplineTextFormat: ".0f",
         idVariable: undefined,
         voronoiStroke: 'none',
         maxDistanceFromPoint: 50,
@@ -18550,6 +18556,8 @@ var     y0$3;
       var voronoiStroke = cfg.voronoiStroke;
       var yScaleType = cfg.yScaleType;
       var yScaleExponent = cfg.yScaleExponent;
+      var xDroplineTextFormat = cfg.xDroplineTextFormat;
+      var yDroplineTextFormat = cfg.yDroplineTextFormat;
       var maxDistanceFromPoint = cfg.maxDistanceFromPoint;
 
       // labels
@@ -18853,7 +18861,9 @@ var     y0$3;
                 wrapper: wrapper,
                 height: height,
                 width: width,
-                tooltipVariables: tooltipVariables
+                tooltipVariables: tooltipVariables,
+                xDroplineTextFormat: xDroplineTextFormat,
+                yDroplineTextFormat: yDroplineTextFormat
               };
               // return the updated popoverTooltip
               popoverTooltip = showTooltip(site.data, undefined, showTooltipOptions, popoverTooltip);
