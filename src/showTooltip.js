@@ -72,6 +72,7 @@ export function showTooltip(d, i, options, popoverTooltip) {
   //Define and show the tooltip
   popoverTooltip = new Popover(elementSelector, { 
     trigger: 'hover',
+    duration: 100,
     template: generateHTML()
   });
 

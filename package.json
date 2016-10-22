@@ -45,7 +45,6 @@
     "rollup-plugin-node-resolve": "^2.0.0"
   },
   "dependencies": {
-    "bootstrap": "^3.3.7",
     "bootstrap.native": "^1.0.51",
     "d3": "git+https://github.com/micahstubbs/d3.git#voronoi-find",
     "d3-voronoi": "^1.0.2",

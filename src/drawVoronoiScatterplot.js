@@ -361,7 +361,6 @@ export function drawVoronoiScatterplot(selector, inputData, options) {
       .style('fill-opacity', opacityCircles)
       .attr('data-content', 'some data content')
       .attr('data-toggle', 'popover')
-      .attr('data-duration', 100);
       // .append('title')
       //   .text(d => `${d[idVariable]} ${d[xLabelDetail]}`);
 

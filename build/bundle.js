@@ -18404,21 +18404,12 @@ var     y0$3;
       //Define and show the tooltip
       popoverTooltip = new Popover(elementSelector, {
         trigger: 'hover',
+        duration: 100,
         template: generateHTML()
       });
 
       console.log('popoverTooltip', popoverTooltip);
       popoverTooltip.open();
-
-      // $(el).popover({
-      //   placement: 'auto top',
-      //   container: '#chart',
-      //   trigger: 'manual',
-      //   html : true,
-      //   content: 
-      // })
-      // $(el).popover('show');
-
 
       //Make chosen circle more visible
       element.style("opacity", 1);
@@ -18477,10 +18468,6 @@ var     y0$3;
       if (typeof popoverTooltip !== 'undefined') {
         popoverTooltip.close();
       }
-
-      // $('.popover').each(function() {
-      //   $(this).remove();
-      // }); 
 
       //Fade out guide lines, then remove them
       selectAll(".guide").transition().duration(200).style("opacity", 0).remove();
@@ -18789,7 +18776,7 @@ var     y0$3;
             return rScale(d[rVariable]);
           }
           return marksRadius;
-        }).transition().delay(marksDelay).duration(2000).style('fill-opacity', opacityCircles).attr('data-content', 'some data content').attr('data-toggle', 'popover').attr('data-duration', 100);
+        }).transition().delay(marksDelay).duration(2000).style('fill-opacity', opacityCircles).attr('data-content', 'some data content').attr('data-toggle', 'popover');
         // .append('title')
         //   .text(d => `${d[idVariable]} ${d[xLabelDetail]}`);
 
