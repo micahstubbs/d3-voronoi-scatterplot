@@ -65,7 +65,7 @@ export function showTooltip(d, i, options, popoverTooltip) {
           <div class="arrow"></div>
           <div class="popover-content">${allRows}</div>
         </div>`;
-      console.log('html from template', html);
+      // console.log('html from template', html);
       return html;
     };
 
@@ -76,7 +76,7 @@ export function showTooltip(d, i, options, popoverTooltip) {
     template: generateHTML()
   });
 
-  console.log('popoverTooltip', popoverTooltip);
+  // console.log('popoverTooltip', popoverTooltip);
   popoverTooltip.open();
 
   //Make chosen circle more visible
