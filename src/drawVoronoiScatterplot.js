@@ -3,6 +3,7 @@ import { showTooltip } from './showTooltip';
 import { removeTooltip } from './removeTooltip';
 import * as d3 from 'd3';
 import _ from 'lodash';
+import * as bsn from 'bootstrap.native';
 
 export function drawVoronoiScatterplot(selector, inputData, options) {
   //
