@@ -38,10 +38,6 @@ export function removeTooltip (d, i, options, popoverTooltip) {
   if (typeof popoverTooltip !== 'undefined') {
     popoverTooltip.close();
   }
-  
-  // $('.popover').each(function() {
-  //   $(this).remove();
-  // }); 
     
   //Fade out guide lines, then remove them
   d3.selectAll(".guide")

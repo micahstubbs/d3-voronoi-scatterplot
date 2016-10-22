@@ -78,16 +78,6 @@ export function showTooltip(d, i, options, popoverTooltip) {
   console.log('popoverTooltip', popoverTooltip);
   popoverTooltip.open();
 
-  // $(el).popover({
-  //   placement: 'auto top',
-  //   container: '#chart',
-  //   trigger: 'manual',
-  //   html : true,
-  //   content: 
-  // })
-  // $(el).popover('show');
-
-
   //Make chosen circle more visible
   element.style("opacity", 1);
 
