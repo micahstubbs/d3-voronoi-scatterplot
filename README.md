@@ -1,5 +1,9 @@
 # d3-voronoi-scatterplot
 
+# usage
+
+see an example over at the [d3-voronoi-scatterplot-example-project](https://github.com/micahstubbs/d3-voronoi-scatterplot-example-project/tree/master/04) repo
+
 # API Reference 
 
 (a work in progress)
