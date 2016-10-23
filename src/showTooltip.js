@@ -76,10 +76,15 @@ export function showTooltip(d, i, options, popoverTooltip) {
       return html;
     };
 
+  // close any lingering tooltips from
+  // previous interactions
+  d3.selectAll('.popover').remove();
+
   //Define and show the tooltip
   popoverTooltip = new Popover(elementSelector, { 
     trigger: 'hover',
     duration: 100,
+    delay: 100,
     template: generateHTML()
   });
 
