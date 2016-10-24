@@ -45,7 +45,7 @@
     "rollup-plugin-node-resolve": "^2.0.0"
   },
   "dependencies": { 
-    "bootstrap.native": "git+https://github.com/micahstubbs/bootstrap.native.git#prefer-window",
+    "bootstrap.native": "git+https://github.com/micahstubbs/bootstrap.native.git#improve-popover-remove",
     "d3": "git+https://github.com/micahstubbs/d3.git#voronoi-find",
     "d3-voronoi": "^1.0.2",
     "lodash": "^4.15.0",

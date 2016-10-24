@@ -16346,17 +16346,17 @@ var 	y0$3;
 	  } else {
 	    // Browser globals (root is window)
 	    var bsn = factory();
-	    window.Affix = bsn.Affix;
-	    window.Alert = bsn.Alert;
-	    window.Button = bsn.Button;
-	    window.Carousel = bsn.Carousel;
-	    window.Collapse = bsn.Collapse;
-	    window.Dropdown = bsn.Dropdown;
-	    window.Modal = bsn.Modal;
-	    window.Popover = bsn.Popover;
-	    window.ScrollSpy = bsn.ScrollSpy;
-	    window.Tab = bsn.Tab;
-	    window.Tooltip = bsn.Tooltip;
+	    root.Affix = bsn.Affix;
+	    root.Alert = bsn.Alert;
+	    root.Button = bsn.Button;
+	    root.Carousel = bsn.Carousel;
+	    root.Collapse = bsn.Collapse;
+	    root.Dropdown = bsn.Dropdown;
+	    root.Modal = bsn.Modal;
+	    root.Popover = bsn.Popover;
+	    root.ScrollSpy = bsn.ScrollSpy;
+	    root.Tab = bsn.Tab;
+	    root.Tooltip = bsn.Tooltip;
 	  }
 	})(commonjsGlobal, function () {
 	  // Native Javascript for Bootstrap 3 | Internal Utility Functions
@@ -17464,7 +17464,11 @@ var 	y0$3;
 	    };
 	    //remove the popover
 	    this.removePopover = function () {
-	      this.popover && this.options.container.removeChild(this.popover);
+	      try {
+	        this.popover && this.options.container.removeChild(this.popover);
+	      } catch (err) {
+	        console.log(err);
+	      }
 	      this.popover = null;
 	      this.timer = null;
 	    };
@@ -18116,6 +18120,9 @@ var 	y0$3;
 	  // close any lingering tooltips from
 	  // previous interactions
 	  selectAll('.popover').remove();
+
+	  //Fade out guide lines, then remove them
+	  selectAll('.guide').transition().duration(200).style('opacity', 0).remove();
 
 	  //Define and show the tooltip
 	  popoverTooltip = new Popover(elementSelector, {

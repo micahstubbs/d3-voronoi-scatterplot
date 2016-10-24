@@ -80,6 +80,12 @@ export function showTooltip(d, i, options, popoverTooltip) {
   // previous interactions
   d3.selectAll('.popover').remove();
 
+  //Fade out guide lines, then remove them
+  d3.selectAll('.guide')
+    .transition().duration(200)
+    .style('opacity',  0)
+    .remove();
+
   //Define and show the tooltip
   popoverTooltip = new Popover(elementSelector, { 
     trigger: 'hover',
