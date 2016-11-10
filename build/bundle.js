@@ -18109,7 +18109,13 @@ var 	y0$3;
 	        // no formatting
 	        currentValue = f[e.name];
 	      }
-	      var currentRow = '<span style=\'font-size: 11px; display: block; text-align: center;\'>' + e.name + ' ' + currentValue + '</span>';
+	      var currentText = void 0;
+	      if (typeof e.valueOnly !== 'undefined') {
+	        currentText = '' + currentValue;
+	      } else {
+	        currentText = e.name + ' ' + currentValue;
+	      }
+	      var currentRow = '<span style=\'font-size: 11px; display: block; text-align: center;\'>' + currentText + '</span>';
 	      allRows = allRows.concat(currentRow);
 	    });
 	    var html = '<div class="popover" role="tooltip">\n          <div class="arrow"></div>\n          <div class="popover-content">' + allRows + '</div>\n        </div>';
@@ -18529,8 +18535,6 @@ var 	y0$3;
 	    ////////////////////////////////////////////////////////////  
 	    ///// Capture mouse events and voronoi.find() the site /////
 	    ////////////////////////////////////////////////////////////
-
-	    // initialize variable for popover tooltip
 	    var popoverTooltip = void 0;
 
 	    // Use the same variables of the data in the .x and .y as used in the cx and cy of the circle call

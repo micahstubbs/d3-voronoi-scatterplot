@@ -397,8 +397,6 @@ export function drawVoronoiScatterplot(selector, inputData, options) {
     ////////////////////////////////////////////////////////////  
     ///// Capture mouse events and voronoi.find() the site /////
     ////////////////////////////////////////////////////////////
-
-    // initialize variable for popover tooltip
     let popoverTooltip;
 
     // Use the same variables of the data in the .x and .y as used in the cx and cy of the circle call

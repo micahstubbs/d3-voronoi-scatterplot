@@ -65,7 +65,13 @@ export function showTooltip(d, i, options, popoverTooltip) {
           // no formatting
           currentValue = f[e.name];
         }
-        const currentRow = `<span style='font-size: 11px; display: block; text-align: center;'>${e.name} ${currentValue}</span>`;
+        let currentText;
+        if (typeof e.valueOnly !== 'undefined') {
+          currentText = `${currentValue}`;
+        } else {
+          currentText = `${e.name} ${currentValue}`;
+        }
+        const currentRow = `<span style='font-size: 11px; display: block; text-align: center;'>${currentText}</span>`;
         allRows = allRows.concat(currentRow);
       })
       const html = `<div class="popover" role="tooltip">
